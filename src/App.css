@@ -1,0 +1,8 @@
+button {
+  cursor: pointer;
+}
+
+.d-center {
+  display: flex;
+  justify-content: center;
+}
