@@ -15,7 +15,7 @@ const defaultOptions = {
 
 const Logo = () => {
   return (
-    <div>
+    <div className="">
       <Tilt
         className="bg-danger"
         options={defaultOptions}
