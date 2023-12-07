@@ -15,7 +15,7 @@ class App extends Component {
   render() {
     return (
       <div className="container my-5">
-        <ParticlesBg num={100} type="cobweb" bg={true} />
+        <ParticlesBg type="cobweb" bg={true} />
         <Navigation></Navigation>
         <Logo></Logo>
         <Rank></Rank>
