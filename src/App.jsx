@@ -52,9 +52,33 @@ class App extends Component {
     super();
     this.state = {
       input: "",
-      imageURL: ""
+      imageURL: "",
+      box: {}
     };
   }
+
+  calculateFaceLocation = (data) => {
+    const clarifaiFace =
+      data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById("inputImage");
+    const width = Number(image.width);
+    const height = Number(image.height);
+
+    const box = {
+      leftCol: clarifaiFace.left_col * width,
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - clarifaiFace.right_col * width,
+      buttonRow: height - clarifaiFace.bottom_row * height
+    };
+
+    console.log(box);
+
+    return box;
+  };
+
+  displayFaceBox = (box) => {
+    this.setState({ box: box });
+  };
 
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
@@ -71,11 +95,9 @@ class App extends Component {
           getRequestOptions(this.state.imageURL)
         )
           .then((response) => response.json())
-          .then((result) =>
-            console.log(
-              result.outputs[0].data.regions[0].region_info.bounding_box
-            )
-          )
+          .then((result) => {
+            this.displayFaceBox(this.calculateFaceLocation(result));
+          })
           .catch((error) => console.log("error", error))
     );
   };
@@ -91,7 +113,10 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         ></ImageLinkForm>
-        <FaceRecognition imageURL={this.state.imageURL}></FaceRecognition>
+        <FaceRecognition
+          imageURL={this.state.imageURL}
+          box={this.state.box}
+        ></FaceRecognition>
       </div>
     );
   }
