@@ -6,6 +6,7 @@ import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import ParticlesBg from "particles-bg";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
+import Signin from "./components/Signin/Signin";
 
 // Here you can set the model you are using from Clarifai API.
 const getModelId = () => {
@@ -53,7 +54,8 @@ class App extends Component {
     this.state = {
       input: "",
       imageURL: "",
-      box: {}
+      box: {},
+      route: "signin"
     };
   }
 
@@ -103,20 +105,32 @@ class App extends Component {
   };
 
   render() {
+    let content;
+
+    if (this.state.route === "signin") {
+      content = <Signin />;
+    } else {
+      content = (
+        <div>
+          <Logo></Logo>
+          <Rank></Rank>
+          <ImageLinkForm
+            onInputChange={this.onInputChange}
+            onButtonSubmit={this.onButtonSubmit}
+          ></ImageLinkForm>
+          <FaceRecognition
+            imageURL={this.state.imageURL}
+            box={this.state.box}
+          ></FaceRecognition>
+        </div>
+      );
+    }
+
     return (
       <div className="container my-5">
         <ParticlesBg type="cobweb" bg={true} num={100} />
         <Navigation></Navigation>
-        <Logo></Logo>
-        <Rank></Rank>
-        <ImageLinkForm
-          onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSubmit}
-        ></ImageLinkForm>
-        <FaceRecognition
-          imageURL={this.state.imageURL}
-          box={this.state.box}
-        ></FaceRecognition>
+        {content}
       </div>
     );
   }
