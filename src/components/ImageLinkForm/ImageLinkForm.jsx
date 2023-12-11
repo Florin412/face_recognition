@@ -1,6 +1,6 @@
 import "./ImageLinkForm.css";
 
-const ImageLinkForm = () => {
+const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
   return (
     <div className="text-center ">
       {/* Info Text */}
@@ -24,6 +24,7 @@ const ImageLinkForm = () => {
             placeholder="Type the image's url"
             style={{ width: "70%" }}
             name="url_for_image"
+            onChange={onInputChange}
           />
 
           {/* Button */}
@@ -31,6 +32,7 @@ const ImageLinkForm = () => {
             type="button"
             className="bg-pink grow-on-hover rounded text-white"
             style={{ width: "30%" }}
+            onClick={onButtonSubmit}
           >
             Detect
           </button>
