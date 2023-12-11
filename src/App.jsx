@@ -7,11 +7,12 @@ import Rank from "./components/Rank/Rank";
 import ParticlesBg from "particles-bg";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 
+// Here you can set the model you are using from Clarifai API.
 const getModelId = () => {
   return "face-detection";
 };
 
-const returnRequestOptions = (imageURL) => {
+const getRequestOptions = (imageURL) => {
   const PAT = "fb9e54191c4247b692492bb0febbd734";
   const USER_ID = "lupau412";
   const APP_ID = "my_app";
@@ -67,7 +68,7 @@ class App extends Component {
       () =>
         fetch(
           "https://api.clarifai.com/v2/models/" + getModelId() + "/outputs",
-          returnRequestOptions(this.state.imageURL)
+          getRequestOptions(this.state.imageURL)
         )
           .then((response) => response.json())
           .then((result) =>
@@ -90,7 +91,6 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         ></ImageLinkForm>
-        {/* in the below component, the image will be displayed */}
         <FaceRecognition imageURL={this.state.imageURL}></FaceRecognition>
       </div>
     );
