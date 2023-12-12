@@ -13,7 +13,7 @@ const Register = ({ onChangeRoute }) => {
           <input
             type="text"
             className="form-control"
-            id="floatingInput"
+            id="floatingFirstName"
             placeholder="First Name"
           />
           <label htmlFor="floatingInput">First Name</label>
@@ -24,7 +24,7 @@ const Register = ({ onChangeRoute }) => {
           <input
             type="text"
             className="form-control"
-            id="floatingInput"
+            id="floatingLastName"
             placeholder="Last Name"
           />
           <label htmlFor="floatingInput">Last Name</label>
@@ -35,7 +35,7 @@ const Register = ({ onChangeRoute }) => {
           <input
             type="email"
             className="form-control"
-            id="floatingInput"
+            id="floatingEmail"
             placeholder="name@example.com"
           />
           <label htmlFor="floatingInput">Email address</label>
@@ -45,7 +45,6 @@ const Register = ({ onChangeRoute }) => {
         <div className="form-floating">
           <input
             type="password"
-            npn
             className="form-control"
             id="floatingPassword"
             placeholder="Password"

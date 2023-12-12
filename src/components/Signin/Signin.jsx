@@ -22,7 +22,6 @@ const Signin = ({ onChangeRoute }) => {
         <div className="form-floating">
           <input
             type="password"
-            npn
             className="form-control"
             id="floatingPassword"
             placeholder="Password"
