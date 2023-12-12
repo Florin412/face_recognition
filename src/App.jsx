@@ -121,15 +121,16 @@ class App extends Component {
 
   render() {
     let content;
+    const { route, imageURL, box, isSignedIn } = this.state;
 
-    if (this.state.route === "signin") {
+    if (route === "signin") {
       content = (
         <Signin
           onChangeRoute={this.onChangeRoute}
           onChangeSignedIn={this.onChangeSignedIn}
         />
       );
-    } else if (this.state.route === "home") {
+    } else if (route === "home") {
       content = (
         <div>
           <Logo></Logo>
@@ -138,13 +139,10 @@ class App extends Component {
             onInputChange={this.onInputChange}
             onButtonSubmit={this.onButtonSubmit}
           ></ImageLinkForm>
-          <FaceRecognition
-            imageURL={this.state.imageURL}
-            box={this.state.box}
-          ></FaceRecognition>
+          <FaceRecognition imageURL={imageURL} box={box}></FaceRecognition>
         </div>
       );
-    } else if (this.state.route === "register") {
+    } else if (route === "register") {
       content = <Register onChangeRoute={this.onChangeRoute}></Register>;
     }
 
@@ -153,7 +151,7 @@ class App extends Component {
         <ParticlesBg type="cobweb" bg={true} num={100} />
         <Navigation
           onChangeRoute={this.onChangeRoute}
-          isSignedIn={this.state.isSignedIn}
+          isSignedIn={isSignedIn}
         ></Navigation>
         {content}
       </div>
