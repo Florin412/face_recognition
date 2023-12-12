@@ -1,33 +1,25 @@
 const Register = ({ onChangeRoute }) => {
   return (
     <div className="d-center text-center">
-      <div
+      <form
         style={{ background: "rgba(255, 255, 255, 0.1)", width: "30rem" }}
         className="border border-1 p-5 rounded shadow "
         children="card"
       >
         <h1 className="mb-4 fw-bold">Register</h1>
 
-        {/* First Name */}
+        {/* Name */}
         <div className="form-floating mb-3">
           <input
             type="text"
             className="form-control"
-            id="floatingFirstName"
-            placeholder="First Name"
+            id="floatingName"
+            placeholder="Full Name"
+            name="full-name"
+            autoComplete="name"
+            required
           />
-          <label htmlFor="floatingInput">First Name</label>
-        </div>
-
-        {/* Last Name */}
-        <div className="form-floating mb-3">
-          <input
-            type="text"
-            className="form-control"
-            id="floatingLastName"
-            placeholder="Last Name"
-          />
-          <label htmlFor="floatingInput">Last Name</label>
+          <label htmlFor="floatingName">Full Name</label>
         </div>
 
         {/* Email */}
@@ -37,8 +29,11 @@ const Register = ({ onChangeRoute }) => {
             className="form-control"
             id="floatingEmail"
             placeholder="name@example.com"
+            name="email"
+            autoComplete="email"
+            required
           />
-          <label htmlFor="floatingInput">Email address</label>
+          <label htmlFor="floatingEmail">Email address</label>
         </div>
 
         {/* Password */}
@@ -48,6 +43,9 @@ const Register = ({ onChangeRoute }) => {
             className="form-control"
             id="floatingPassword"
             placeholder="Password"
+            name="new-password"
+            autoComplete="new-password"
+            required
           />
           <label htmlFor="floatingPassword">Password</label>
         </div>
@@ -62,7 +60,7 @@ const Register = ({ onChangeRoute }) => {
             Register
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 const Signin = ({ onChangeRoute }) => {
   return (
     <div className="d-center text-center">
-      <div
+      <form
         style={{ background: "rgba(255, 255, 255, 0.1)", width: "30rem" }}
         className="border border-1 p-5 rounded shadow "
         children="card"
@@ -14,6 +14,9 @@ const Signin = ({ onChangeRoute }) => {
             className="form-control"
             id="floatingInput"
             placeholder="name@example.com"
+            name="email"
+            autoComplete="email"
+            required
           />
           <label htmlFor="floatingInput">Email address</label>
         </div>
@@ -25,6 +28,9 @@ const Signin = ({ onChangeRoute }) => {
             className="form-control"
             id="floatingPassword"
             placeholder="Password"
+            name="current-password"
+            autoComplete="current-password"
+            required
           />
           <label htmlFor="floatingPassword">Password</label>
         </div>
@@ -45,7 +51,7 @@ const Signin = ({ onChangeRoute }) => {
             Register
           </p>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
