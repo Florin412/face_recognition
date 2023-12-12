@@ -56,12 +56,22 @@ class App extends Component {
       input: "",
       imageURL: "",
       box: {},
-      route: "signin"
+      route: "signin",
+      isSignedIn: false
     };
   }
 
+  // When route is changing, we also have to change the isSignedIn state.
   onChangeRoute = (routeToGo) => {
-    this.setState({ route: routeToGo });
+    this.setState({ route: routeToGo }, () => {
+      if (this.state.route === "home") {
+        // If we are in home page, means that we are signed in.
+        this.setState({ isSignedIn: true });
+      } else {
+        // If we are not in the home page, we are not signed in.
+        this.setState({ isSignedIn: false });
+      }
+    });
   };
 
   calculateFaceLocation = (data) => {
@@ -113,7 +123,12 @@ class App extends Component {
     let content;
 
     if (this.state.route === "signin") {
-      content = <Signin onChangeRoute={this.onChangeRoute} />;
+      content = (
+        <Signin
+          onChangeRoute={this.onChangeRoute}
+          onChangeSignedIn={this.onChangeSignedIn}
+        />
+      );
     } else if (this.state.route === "home") {
       content = (
         <div>
@@ -136,7 +151,10 @@ class App extends Component {
     return (
       <div className="container my-5">
         <ParticlesBg type="cobweb" bg={true} num={100} />
-        <Navigation onChangeRoute={this.onChangeRoute}></Navigation>
+        <Navigation
+          onChangeRoute={this.onChangeRoute}
+          isSignedIn={this.state.isSignedIn}
+        ></Navigation>
         {content}
       </div>
     );

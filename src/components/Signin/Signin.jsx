@@ -1,4 +1,4 @@
-const Signin = ({ onChangeRoute }) => {
+const Signin = ({ onChangeRoute, onChangeSignedIn }) => {
   return (
     <div className="d-center text-center">
       <form
