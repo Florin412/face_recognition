@@ -1,4 +1,4 @@
-const Signin = ({ onChangeRoute }) => {
+const Register = ({ onChangeRoute }) => {
   return (
     <div className="d-center text-center">
       <div
@@ -6,7 +6,30 @@ const Signin = ({ onChangeRoute }) => {
         className="border border-1 p-5 rounded shadow "
         children="card"
       >
-        <h1 className="mb-4 fw-bold">Sign In</h1>
+        <h1 className="mb-4 fw-bold">Register</h1>
+
+        {/* First Name */}
+        <div className="form-floating mb-3">
+          <input
+            type="text"
+            className="form-control"
+            id="floatingInput"
+            placeholder="First Name"
+          />
+          <label htmlFor="floatingInput">First Name</label>
+        </div>
+
+        {/* Last Name */}
+        <div className="form-floating mb-3">
+          <input
+            type="text"
+            className="form-control"
+            id="floatingInput"
+            placeholder="Last Name"
+          />
+          <label htmlFor="floatingInput">Last Name</label>
+        </div>
+
         {/* Email */}
         <div className="form-floating mb-3">
           <input
@@ -37,18 +60,12 @@ const Signin = ({ onChangeRoute }) => {
             className="btn btn-primary px-5 mb-3 fs-5"
             onClick={() => onChangeRoute("home")}
           >
-            Sign in
-          </button>
-          <p
-            className="cursor-pointer fs-5"
-            onClick={() => onChangeRoute("register")}
-          >
             Register
-          </p>
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default Signin;
+export default Register;

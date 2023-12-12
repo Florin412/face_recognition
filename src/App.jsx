@@ -7,6 +7,7 @@ import Rank from "./components/Rank/Rank";
 import ParticlesBg from "particles-bg";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin";
+import Register from "./components/Register/Register";
 
 // Here you can set the model you are using from Clarifai API.
 const getModelId = () => {
@@ -59,6 +60,10 @@ class App extends Component {
     };
   }
 
+  onChangeRoute = (routeToGo) => {
+    this.setState({ route: routeToGo });
+  };
+
   calculateFaceLocation = (data) => {
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -108,8 +113,8 @@ class App extends Component {
     let content;
 
     if (this.state.route === "signin") {
-      content = <Signin />;
-    } else {
+      content = <Signin onChangeRoute={this.onChangeRoute} />;
+    } else if (this.state.route === "home") {
       content = (
         <div>
           <Logo></Logo>
@@ -124,12 +129,14 @@ class App extends Component {
           ></FaceRecognition>
         </div>
       );
+    } else if (this.state.route === "register") {
+      content = <Register onChangeRoute={this.onChangeRoute}></Register>;
     }
 
     return (
       <div className="container my-5">
         <ParticlesBg type="cobweb" bg={true} num={100} />
-        <Navigation></Navigation>
+        <Navigation onChangeRoute={this.onChangeRoute}></Navigation>
         {content}
       </div>
     );
