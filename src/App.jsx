@@ -115,7 +115,9 @@ class App extends Component {
           .then((result) => {
             this.displayFaceBox(this.calculateFaceLocation(result));
           })
-          .catch((error) => console.log("error", error))
+          .catch((error) =>
+            console.log("Error fetching data from Clarifai API", error)
+          )
     );
   };
 
