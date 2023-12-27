@@ -1,4 +1,4 @@
-const Register = ({ onChangeRoute }) => {
+const Register = ({ onRouteChange }) => {
   return (
     <div className="d-center text-center">
       <form
@@ -55,7 +55,7 @@ const Register = ({ onChangeRoute }) => {
           <button
             type="submit"
             className="btn btn-primary px-5 mb-3 fs-5"
-            onClick={() => onChangeRoute("home")}
+            onClick={() => onRouteChange("home")}
           >
             Register
           </button>

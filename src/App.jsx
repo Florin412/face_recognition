@@ -62,7 +62,7 @@ class App extends Component {
   }
 
   // When route is changing, we also have to change the isSignedIn state.
-  onChangeRoute = (routeToGo) => {
+  onRouteChange = (routeToGo) => {
     this.setState({ route: routeToGo }, () => {
       if (this.state.route === "home") {
         // If we are in home page, means that we are signed in.
@@ -126,12 +126,7 @@ class App extends Component {
     const { route, imageURL, box, isSignedIn } = this.state;
 
     if (route === "signin") {
-      content = (
-        <Signin
-          onChangeRoute={this.onChangeRoute}
-          onChangeSignedIn={this.onChangeSignedIn}
-        />
-      );
+      content = <Signin onRouteChange={this.onRouteChange} />;
     } else if (route === "home") {
       content = (
         <div>
@@ -145,14 +140,14 @@ class App extends Component {
         </div>
       );
     } else if (route === "register") {
-      content = <Register onChangeRoute={this.onChangeRoute}></Register>;
+      content = <Register onRouteChange={this.onRouteChange}></Register>;
     }
 
     return (
       <div className="container my-5">
         <ParticlesBg type="cobweb" bg={true} num={100} />
         <Navigation
-          onChangeRoute={this.onChangeRoute}
+          onRouteChange={this.onRouteChange}
           isSignedIn={isSignedIn}
         ></Navigation>
         {content}

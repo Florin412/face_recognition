@@ -1,6 +1,6 @@
 import "./Navigation.css";
 
-const Navigation = ({ onChangeRoute, isSignedIn }) => {
+const Navigation = ({ onRouteChange, isSignedIn }) => {
   if (isSignedIn) {
     //  If we are signed in the app, we should have the option to sign out.
     return (
@@ -12,7 +12,7 @@ const Navigation = ({ onChangeRoute, isSignedIn }) => {
       >
         <p
           className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0 "
-          onClick={() => onChangeRoute("signin")}
+          onClick={() => onRouteChange("signin")}
         >
           Sign out
         </p>
@@ -29,14 +29,14 @@ const Navigation = ({ onChangeRoute, isSignedIn }) => {
       >
         <p
           className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0 "
-          onClick={() => onChangeRoute("signin")}
+          onClick={() => onRouteChange("signin")}
         >
           Sign in
         </p>
 
         <p
           className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0 "
-          onClick={() => onChangeRoute("register")}
+          onClick={() => onRouteChange("register")}
         >
           Resister
         </p>
