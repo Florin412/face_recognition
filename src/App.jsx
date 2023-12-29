@@ -145,12 +145,17 @@ class App extends Component {
     const { route, imageURL, box, isSignedIn } = this.state;
 
     if (route === "signin") {
-      content = <Signin onRouteChange={this.onRouteChange} />;
+      content = (
+        <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+      );
     } else if (route === "home") {
       content = (
         <div>
           <Logo></Logo>
-          <Rank></Rank>
+          <Rank
+            entries={this.state.user.entries}
+            name={this.state.user.name}
+          ></Rank>
           <ImageLinkForm
             onInputChange={this.onInputChange}
             onButtonSubmit={this.onButtonSubmit}
