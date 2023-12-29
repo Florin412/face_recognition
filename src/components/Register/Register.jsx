@@ -39,6 +39,7 @@ class Register extends Component {
       .then((user) => {
         if (user.name.length > 1) {
           console.log(user);
+          this.props.loadUser(user);
           this.props.onRouteChange("home");
         }
       });

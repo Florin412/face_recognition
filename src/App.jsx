@@ -68,6 +68,18 @@ class App extends Component {
     };
   }
 
+  loadUser = (user) => {
+    this.setState({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        entries: user.entries,
+        joined: user.joined
+      }
+    });
+  };
+
   // When route is changing, we also have to change the isSignedIn state.
   onRouteChange = (routeToGo) => {
     this.setState({ route: routeToGo }, () => {
@@ -147,7 +159,12 @@ class App extends Component {
         </div>
       );
     } else if (route === "register") {
-      content = <Register onRouteChange={this.onRouteChange}></Register>;
+      content = (
+        <Register
+          loadUser={this.loadUser}
+          onRouteChange={this.onRouteChange}
+        ></Register>
+      );
     }
 
     return (
