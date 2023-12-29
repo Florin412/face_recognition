@@ -125,18 +125,36 @@ class App extends Component {
       {
         imageURL: this.state.input
       },
-      () =>
+      () => {
         fetch(
           "https://api.clarifai.com/v2/models/" + getModelId() + "/outputs",
           getRequestOptions(this.state.imageURL)
         )
           .then((response) => response.json())
           .then((result) => {
+            fetch("http://localhost:3000/image", {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                id: this.state.user.id
+              })
+            })
+              .then((res) => res.json())
+              .then((entries) => {
+                this.setState(Object.assign(this.state.user, { entries }));
+              })
+              .catch((err) =>
+                console.log("Error fetching entries'user from our server api")
+              );
+
             this.displayFaceBox(this.calculateFaceLocation(result));
           })
           .catch((error) =>
             console.log("Error fetching data from Clarifai API", error)
-          )
+          );
+      }
     );
   };
 
