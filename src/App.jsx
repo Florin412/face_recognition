@@ -48,24 +48,26 @@ const getRequestOptions = (imageURL) => {
   return requestOptions;
 };
 
+const initialState = {
+  input: "",
+  imageURL: "",
+  box: {},
+  route: "signin",
+  isSignedIn: false,
+  user: {
+    id: "",
+    name: "",
+    email: "",
+    entries: 0,
+    joined: ""
+  }
+};
+
 // App component
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      input: "",
-      imageURL: "",
-      box: {},
-      route: "signin",
-      isSignedIn: false,
-      user: {
-        id: "",
-        name: "",
-        email: "",
-        entries: 0,
-        joined: ""
-      }
-    };
+    this.state = initialState;
   }
 
   loadUser = (user) => {
@@ -88,7 +90,8 @@ class App extends Component {
         this.setState({ isSignedIn: true });
       } else {
         // If we are not in the home page, we are not signed in.
-        this.setState({ isSignedIn: false });
+        // So we have to clear the values of the state.
+        this.setState(initialState);
       }
     });
   };
@@ -135,6 +138,7 @@ class App extends Component {
             if (result.status.description === "Input invalid argument") {
               console.log("You MUST enter a valid URL");
             } else {
+              // Increment the entries if api gives us a valid response.
               fetch("http://localhost:3000/image", {
                 method: "PUT",
                 headers: {
