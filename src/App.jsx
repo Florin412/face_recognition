@@ -48,26 +48,28 @@ const getRequestOptions = (imageURL) => {
   return requestOptions;
 };
 
-const initialState = {
-  input: "",
-  imageUrl: "",
-  box: {},
-  route: "signin",
-  isSignedIn: false,
-  user: {
-    id: "",
-    name: "",
-    email: "",
-    entries: 0,
-    joined: ""
-  }
+const initialState = () => {
+  return {
+    input: "",
+    imageURL: "",
+    box: {},
+    route: "signin",
+    isSignedIn: false,
+    user: {
+      id: "",
+      name: "",
+      email: "",
+      entries: 0,
+      joined: ""
+    }
+  };
 };
 
 // App component
 class App extends Component {
   constructor() {
     super();
-    this.state = initialState;
+    this.state = initialState();
   }
 
   loadUser = (user) => {
@@ -82,13 +84,15 @@ class App extends Component {
     });
   };
 
-  onRouteChange = (route) => {
-    if (route === "signout") {
-      this.setState(initialState);
-    } else if (route === "home") {
+  onRouteChange = (routeToGo) => {
+    if (routeToGo === "signin" || routeToGo === "register") {
+      // we reset the state of the app if we are not logged in the app.
+      this.setState(initialState());
+    } else if (routeToGo === "home") {
       this.setState({ isSignedIn: true });
     }
-    this.setState({ route: route });
+
+    this.setState({ route: routeToGo });
   };
 
   calculateFaceLocation = (data) => {
