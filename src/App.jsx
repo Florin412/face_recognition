@@ -132,10 +132,8 @@ class App extends Component {
         )
           .then((response) => response.json())
           .then((result) => {
-            console.log(result, "aici sunt");
-
             if (result.status.description === "Input invalid argument") {
-              console.err("You MUST enter a valid URL");
+              console.log("You MUST enter a valid URL");
             } else {
               fetch("http://localhost:3000/image", {
                 method: "PUT",
