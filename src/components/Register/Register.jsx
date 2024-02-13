@@ -37,7 +37,7 @@ class Register extends Component {
     })
       .then((res) => res.json())
       .then((user) => {
-        if (user.name.length > 1) {
+        if (user.id) {
           console.log(user);
           this.props.loadUser(user);
           this.props.onRouteChange("home");
@@ -68,6 +68,7 @@ class Register extends Component {
               name="name"
               onChange={this.onNameChange}
               autoComplete="name"
+              minLength="3"
               required
             />
             <label htmlFor="floatingName">Name</label>
@@ -98,6 +99,7 @@ class Register extends Component {
               onChange={this.onPasswordChange}
               name="new-password"
               autoComplete="new-password"
+              minLength="6"
               required
             />
             <label htmlFor="floatingPassword">Password</label>

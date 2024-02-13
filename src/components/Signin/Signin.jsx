@@ -19,7 +19,6 @@ class Signin extends Component {
   };
 
   onSubmitSignIn = () => {
-    // Efectuăm request-ul folosind fetch()
     fetch("http://localhost:3000/signin", {
       method: "POST",
       headers: {
@@ -36,12 +35,11 @@ class Signin extends Component {
           this.props.loadUser(user);
           this.props.onRouteChange("home");
         } else {
-          console.error("Eroare de logare, email sau parola incorecte");
+          console.error("Error loggin in, email or password incorrect.");
         }
       })
       .catch((error) => {
-        // Gestionăm erorile în caz de problemă în timpul request-ului
-        console.error("Eroare:", error);
+        console.error("Login error:", error);
       });
   };
 
@@ -81,6 +79,7 @@ class Signin extends Component {
               name="current-password"
               onChange={this.onPasswordChange}
               autoComplete="current-password"
+              minLength="6"
               required
             />
             <label htmlFor="floatingPassword">Password</label>
