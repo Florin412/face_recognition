@@ -50,7 +50,7 @@ class Register extends Component {
 
   render() {
     return (
-      <div className="d-center text-center">
+      <form className="d-center text-center">
         <div
           style={{ background: "rgba(255, 255, 255, 0.1)", width: "30rem" }}
           className="border border-1 p-5 rounded shadow "
@@ -114,7 +114,7 @@ class Register extends Component {
             </button>
           </div>
         </div>
-      </div>
+      </form>
     );
   }
 }

@@ -48,26 +48,28 @@ const getRequestOptions = (imageURL) => {
   return requestOptions;
 };
 
-const initialState = {
-  input: "",
-  imageURL: "",
-  box: {},
-  route: "signin",
-  isSignedIn: false,
-  user: {
-    id: "",
-    name: "",
-    email: "",
-    entries: 0,
-    joined: ""
-  }
+let initialState = (route) => {
+  return {
+    input: "",
+    imageURL: "",
+    box: {},
+    route: route,
+    isSignedIn: false,
+    user: {
+      id: "",
+      name: "",
+      email: "",
+      entries: 0,
+      joined: ""
+    }
+  };
 };
 
 // App component
 class App extends Component {
   constructor() {
     super();
-    this.state = initialState;
+    this.state = initialState("signin");
   }
 
   loadUser = (user) => {
@@ -88,10 +90,14 @@ class App extends Component {
       if (this.state.route === "home") {
         // If we are in home page, means that we are signed in.
         this.setState({ isSignedIn: true });
-      } else {
+      } else if (this.state.route === "signin") {
         // If we are not in the home page, we are not signed in.
         // So we have to clear the values of the state.
-        this.setState(initialState);
+        this.setState(initialState("signin"));
+      } else if (this.state.route === "register") {
+        // If we are not in the home page, we are not signed in.
+        // So we have to clear the values of the state.
+        this.setState(initialState("register"));
       }
     });
   };

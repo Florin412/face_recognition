@@ -49,7 +49,7 @@ class Signin extends Component {
     const { onRouteChange } = this.props;
 
     return (
-      <div className="d-center text-center">
+      <form className="d-center text-center">
         <div
           style={{ background: "rgba(255, 255, 255, 0.1)", width: "30rem" }}
           className="border border-1 p-5 rounded shadow "
@@ -103,7 +103,7 @@ class Signin extends Component {
             </p>
           </div>
         </div>
-      </div>
+      </form>
     );
   }
 }
