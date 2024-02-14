@@ -9,45 +9,6 @@ import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
 
-// Here you can set the model you are using from Clarifai API.
-const getModelId = () => {
-  return "face-detection";
-};
-
-const getRequestOptions = (imageURL) => {
-  const PAT = "fb9e54191c4247b692492bb0febbd734";
-  const USER_ID = "lupau412";
-  const APP_ID = "my_app";
-  const IMAGE_URL = imageURL;
-
-  const raw = JSON.stringify({
-    user_app_id: {
-      user_id: USER_ID,
-      app_id: APP_ID
-    },
-    inputs: [
-      {
-        data: {
-          image: {
-            url: IMAGE_URL
-          }
-        }
-      }
-    ]
-  });
-
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      Authorization: "Key " + PAT
-    },
-    body: raw
-  };
-
-  return requestOptions;
-};
-
 const initialState = () => {
   return {
     input: "",
@@ -128,15 +89,24 @@ class App extends Component {
         imageURL: this.state.input
       },
       () => {
-        fetch(
-          "https://api.clarifai.com/v2/models/" + getModelId() + "/outputs",
-          getRequestOptions(this.state.imageURL)
-        )
-          .then((response) => response.json())
+        // Here we make a request to our server that will make a request to the Clarifai API
+        // in order to hide the API KEY.
+        fetch("http://localhost:3000/imageurl", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            input: this.state.input
+          })
+        })
+          .then((data) => {
+            return data.json();
+          })
           .then((result) => {
-            if (result.status.description === "Input invalid argument") {
-              console.log("You MUST enter a valid URL");
-            } else {
+            console.log(result);
+
+            if (result) {
               // Increment the entries if api gives us a valid response.
               fetch("http://localhost:3000/image", {
                 method: "PUT",
