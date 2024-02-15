@@ -53,7 +53,7 @@ class Signin extends Component {
           className="border border-1 p-5 rounded shadow "
           children="card"
         >
-          <h1 className="mb-4 fw-bold">Sign In boss</h1>
+          <h1 className="mb-4 fw-bold">Sign In</h1>
           {/* Email */}
           <div className="form-floating mb-3">
             <input
