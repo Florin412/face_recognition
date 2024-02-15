@@ -91,7 +91,7 @@ class App extends Component {
       () => {
         // Here we make a request to our server that will make a request to the Clarifai API
         // in order to hide the API KEY.
-        fetch("http://localhost:3000/imageurl", {
+        fetch("https://smart-brain-api-jklb.onrender.com/imageurl", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -108,7 +108,7 @@ class App extends Component {
 
             if (result) {
               // Increment the entries if api gives us a valid response.
-              fetch("http://localhost:3000/image", {
+              fetch("https://smart-brain-api-jklb.onrender.com/image", {
                 method: "PUT",
                 headers: {
                   "Content-Type": "application/json"
