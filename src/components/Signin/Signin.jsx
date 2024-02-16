@@ -29,13 +29,19 @@ class Signin extends Component {
         password: this.state.signInPassword
       })
     })
-      .then((response) => {response.json()})
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then((user) => {
-        if (user.name) {
+        if (user.id) {
+          console.log(user);
           this.props.loadUser(user);
           this.props.onRouteChange("home");
         } else {
-          console.error("Error loggin in, email or password incorrect.");
+          console.error("Error logging in, email or password incorrect.");
         }
       })
       .catch((error) => {

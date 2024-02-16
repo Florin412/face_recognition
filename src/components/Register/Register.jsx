@@ -35,16 +35,23 @@ class Register extends Component {
         password: this.state.password
       })
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
       .then((user) => {
         if (user.id) {
           console.log(user);
           this.props.loadUser(user);
           this.props.onRouteChange("home");
+        } else {
+          console.log("Unable to register. User ID not received.");
         }
       })
       .catch((err) => {
-        console.log("Unable to register.");
+        console.error("Unable to register:", err);
       });
   };
 
