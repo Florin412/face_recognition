@@ -31,7 +31,7 @@ class Signin extends Component {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Error logging in, email or password incorrect");
         }
         return response.json();
       })
