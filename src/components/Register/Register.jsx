@@ -67,8 +67,6 @@ class Register extends Component {
               placeholder="Name"
               name="name"
               onChange={this.onNameChange}
-              autoComplete="name"
-              minLength="3"
               required
             />
             <label htmlFor="floatingName">Name</label>
@@ -83,7 +81,6 @@ class Register extends Component {
               placeholder="name@example.com"
               name="email"
               onChange={this.onEmailChange}
-              autoComplete="email"
               required
             />
             <label htmlFor="floatingEmail">Email address</label>
@@ -98,8 +95,6 @@ class Register extends Component {
               placeholder="Password"
               onChange={this.onPasswordChange}
               name="new-password"
-              autoComplete="new-password"
-              minLength="6"
               required
             />
             <label htmlFor="floatingPassword">Password</label>

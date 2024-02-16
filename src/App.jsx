@@ -169,7 +169,7 @@ class App extends Component {
 
     return (
       <div className="container my-5">
-        <ParticlesBg type="cobweb" bg={true} num={100} />
+        <ParticlesBg type="cobweb" bg={true} num={50} />
         <Navigation
           onRouteChange={this.onRouteChange}
           isSignedIn={isSignedIn}
