@@ -63,7 +63,7 @@ class Signin extends Component {
           {/* Email */}
           <div className="form-floating mb-3">
             <input
-              type="email"
+              type="text"
               className="form-control"
               id="floatingInput"
               placeholder="name@example.com"

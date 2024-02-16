@@ -83,7 +83,7 @@ class Register extends Component {
           {/* Email */}
           <div className="form-floating mb-3">
             <input
-              type="email"
+              type="text"
               className="form-control"
               id="floatingEmail"
               placeholder="name@example.com"
