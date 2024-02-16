@@ -29,7 +29,7 @@ class Signin extends Component {
         password: this.state.signInPassword
       })
     })
-      .then((response) => response.json())
+      .then((response) => {response.json()})
       .then((user) => {
         if (user.name) {
           this.props.loadUser(user);

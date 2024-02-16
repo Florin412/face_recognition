@@ -33,14 +33,14 @@ class App extends Component {
     this.state = initialState();
   }
 
-  loadUser = (user) => {
+  loadUser = (userToLoad) => {
     this.setState({
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        entries: user.entries,
-        joined: user.joined
+        id: userToLoad.id,
+        name: userToLoad.name,
+        email: userToLoad.email,
+        entries: userToLoad.entries,
+        joined: userToLoad.joined
       }
     });
   };
