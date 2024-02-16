@@ -35,7 +35,7 @@ class Signin extends Component {
           this.props.loadUser(user);
           this.props.onRouteChange("home");
         } else {
-          console.error("Error logging in, email or password incorrect.");
+          console.error("Error loggin in, email or password incorrect.");
         }
       })
       .catch((error) => {
@@ -63,6 +63,7 @@ class Signin extends Component {
               placeholder="name@example.com"
               name="email"
               onChange={this.onEmailChange}
+              autoComplete="email"
               required
             />
             <label htmlFor="floatingInput">Email address</label>
@@ -77,6 +78,8 @@ class Signin extends Component {
               placeholder="Password"
               name="current-password"
               onChange={this.onPasswordChange}
+              autoComplete="current-password"
+              
               required
             />
             <label htmlFor="floatingPassword">Password</label>
