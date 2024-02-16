@@ -106,7 +106,7 @@ class App extends Component {
           .then((result) => {
             console.log(result);
 
-            if (result.status.description === "ok") {
+            if (result.status.code === 10000) {
               // Increment the entries if api gives us a valid response.
               fetch("https://smart-brain-api-jklb.onrender.com/image", {
                 method: "PUT",
