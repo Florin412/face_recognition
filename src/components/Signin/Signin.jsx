@@ -79,7 +79,6 @@ class Signin extends Component {
               name="current-password"
               onChange={this.onPasswordChange}
               autoComplete="current-password"
-              
               required
             />
             <label htmlFor="floatingPassword">Password</label>
