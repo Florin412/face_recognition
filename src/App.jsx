@@ -106,7 +106,7 @@ class App extends Component {
           .then((result) => {
             console.log(result);
 
-            if (result) {
+            if (result.status.description === "ok") {
               // Increment the entries if api gives us a valid response.
               fetch("https://smart-brain-api-jklb.onrender.com/image", {
                 method: "PUT",
@@ -126,6 +126,8 @@ class App extends Component {
                 );
 
               this.displayFaceBox(this.calculateFaceLocation(result));
+            } else {
+              console.log("You should enter a valid HTTPS URL");
             }
           })
           .catch((error) =>
