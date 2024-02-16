@@ -31,7 +31,7 @@ class Signin extends Component {
     })
       .then((response) => response.json())
       .then((user) => {
-        if (user.id) {
+        if (user.name) {
           this.props.loadUser(user);
           this.props.onRouteChange("home");
         } else {
