@@ -46,7 +46,7 @@ class App extends Component {
   };
 
   onRouteChange = (routeToGo) => {
-    if (routeToGo === "signin" || routeToGo === "register") {
+    if (routeToGo === "signin") {
       // we reset the state of the app if we are not logged in the app.
       this.setState(initialState());
     } else if (routeToGo === "home") {
