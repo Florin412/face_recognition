@@ -106,6 +106,10 @@ class Signin extends Component {
               Register
             </p>
           </div>
+          <div style={{ fontSize: "12px" }}>
+            <p className="mb-0 fw-bold">For email type: test</p>
+            <p className="mb-0 fw-bold ">For password type: test</p>
+          </div>
         </div>
       </form>
     );
