@@ -12,7 +12,7 @@ const Navigation = ({ onRouteChange, isSignedIn }) => {
       >
         <p
           className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0 "
-          onClick={() => onRouteChange("signin")}
+          onClick={() => onRouteChange("signout")}
         >
           Sign out
         </p>

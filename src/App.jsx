@@ -9,28 +9,26 @@ import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
 
-const initialState = () => {
-  return {
-    input: "",
-    imageURL: "",
-    box: {},
-    route: "signin",
-    isSignedIn: false,
-    user: {
-      id: "",
-      name: "",
-      email: "",
-      entries: 0,
-      joined: ""
-    }
-  };
+const initialState = {
+  input: "",
+  imageUrl: "",
+  box: {},
+  route: "signin",
+  isSignedIn: false,
+  user: {
+    id: "",
+    name: "",
+    email: "",
+    entries: 0,
+    joined: ""
+  }
 };
 
 // App component
 class App extends Component {
   constructor() {
     super();
-    this.state = initialState();
+    this.state = initialState;
   }
 
   loadUser = (userToLoad) => {
@@ -45,15 +43,13 @@ class App extends Component {
     });
   };
 
-  onRouteChange = (routeToGo) => {
-    if (routeToGo === "signin") {
-      // we reset the state of the app if we are not logged in the app.
-      this.setState(initialState());
-    } else if (routeToGo === "home") {
+  onRouteChange = (route) => {
+    if (route === "signout") {
+      this.setState(initialState);
+    } else if (route === "home") {
       this.setState({ isSignedIn: true });
     }
-
-    this.setState({ route: routeToGo });
+    this.setState({ route: route });
   };
 
   calculateFaceLocation = (data) => {
