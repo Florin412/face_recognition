@@ -82,7 +82,7 @@ class App extends Component {
   onButtonSubmit = () => {
     this.setState(
       {
-        imageURL: this.state.input
+        imageUrl: this.state.input
       },
       () => {
         // Here we make a request to our server that will make a request to the Clarifai API
@@ -133,46 +133,80 @@ class App extends Component {
     );
   };
 
-  render() {
-    let content;
-    const { route, imageURL, box, isSignedIn } = this.state;
+  // render() {
+  //   let content;
+  //   const { route, imageURL, box, isSignedIn } = this.state;
 
-    if (route === "signin") {
-      content = (
-        <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-      );
-    } else if (route === "home") {
-      content = (
-        <div>
-          <Logo></Logo>
-          <Rank
-            entries={this.state.user.entries}
-            name={this.state.user.name}
-          ></Rank>
-          <ImageLinkForm
-            onInputChange={this.onInputChange}
-            onButtonSubmit={this.onButtonSubmit}
-          ></ImageLinkForm>
-          <FaceRecognition imageURL={imageURL} box={box}></FaceRecognition>
-        </div>
-      );
-    } else if (route === "register") {
-      content = (
-        <Register
-          loadUser={this.loadUser}
-          onRouteChange={this.onRouteChange}
-        ></Register>
-      );
-    }
+  //   if (route === "signin") {
+  //     content = (
+  //       <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+  //     );
+  //   } else if (route === "home") {
+  //     content = (
+  //       <div>
+  //         <Logo></Logo>
+  //         <Rank
+  //           entries={this.state.user.entries}
+  //           name={this.state.user.name}
+  //         ></Rank>
+  //         <ImageLinkForm
+  //           onInputChange={this.onInputChange}
+  //           onButtonSubmit={this.onButtonSubmit}
+  //         ></ImageLinkForm>
+  //         <FaceRecognition imageURL={imageURL} box={box}></FaceRecognition>
+  //       </div>
+  //     );
+  //   } else if (route === "register") {
+  //     content = (
+  //       <Register
+  //         loadUser={this.loadUser}
+  //         onRouteChange={this.onRouteChange}
+  //       ></Register>
+  //     );
+  //   }
+
+  //   return (
+  //     <div className="container my-5">
+  //       <ParticlesBg type="cobweb" bg={true} num={50} />
+  //       <Navigation
+  //         onRouteChange={this.onRouteChange}
+  //         isSignedIn={isSignedIn}
+  //       ></Navigation>
+  //       {content}
+  //     </div>
+  //   );
+  // }
+  render() {
+    const { isSignedIn, imageUrl, route, box } = this.state;
 
     return (
       <div className="container my-5">
         <ParticlesBg type="cobweb" bg={true} num={50} />
         <Navigation
-          onRouteChange={this.onRouteChange}
           isSignedIn={isSignedIn}
-        ></Navigation>
-        {content}
+          onRouteChange={this.onRouteChange}
+        />
+        {route === "home" ? (
+          <div>
+            <Logo />
+            <Rank
+              name={this.state.user.name}
+              entries={this.state.user.entries}
+            />
+            <ImageLinkForm
+              onInputChange={this.onInputChange}
+              onButtonSubmit={this.onButtonSubmit}
+            />
+            <FaceRecognition box={box} imageUrl={imageUrl} />
+          </div>
+        ) : route === "signin" ? (
+          <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+        ) : (
+          <Register
+            loadUser={this.loadUser}
+            onRouteChange={this.onRouteChange}
+          />
+        )}
       </div>
     );
   }
