@@ -135,7 +135,7 @@ class App extends Component {
 
   render() {
     let content;
-    const { route, imageURL, box, isSignedIn } = this.state;
+    const { route, imageUrl, box, isSignedIn } = this.state;
 
     if (route === "signin") {
       content = (
@@ -153,7 +153,7 @@ class App extends Component {
             onInputChange={this.onInputChange}
             onButtonSubmit={this.onButtonSubmit}
           ></ImageLinkForm>
-          <FaceRecognition imageURL={imageURL} box={box}></FaceRecognition>
+          <FaceRecognition imageUrl={imageUrl} box={box}></FaceRecognition>
         </div>
       );
     } else if (route === "register") {

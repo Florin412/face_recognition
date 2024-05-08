@@ -1,11 +1,11 @@
 import "./FaceRecognition.css";
 
-const FaceRecognition = ({ imageURL, box }) => {
+const FaceRecognition = ({ imageUrl, box }) => {
   return (
     <div className="d-center mt-4">
       <div style={{ position: "absolute" }}>
         <img
-          src={imageURL}
+          src={imageUrl}
           alt=""
           className="img-fluid"
           id="inputImage"
