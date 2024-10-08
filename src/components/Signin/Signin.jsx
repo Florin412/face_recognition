@@ -1,33 +1,30 @@
-import { Component } from "react";
+import React, { useState } from "react";
 
-class Signin extends Component {
-  constructor(props) {
-    super(props);
+const Signin = ({ loadUser, onRouteChange }) => {
+  // Define state variables for email and password
+  const [signInEmail, setSignInEmail] = useState("");
+  const [signInPassword, setSignInPassword] = useState("");
 
-    this.state = {
-      signInEmail: "",
-      signInPassword: ""
-    };
-  }
-
-  onEmailChange = (event) => {
-    this.setState({ signInEmail: event.target.value });
+  const onEmailChange = (event) => {
+    setSignInEmail(event.target.value);
   };
 
-  onPasswordChange = (event) => {
-    this.setState({ signInPassword: event.target.value });
+  const onPasswordChange = (event) => {
+    setSignInPassword(event.target.value);
   };
 
-  onSubmitSignIn = () => {
+  const onSubmitSignIn = (event) => {
+    event.preventDefault(); // Prevent default form submission
+
     fetch("https://smart-brain-api-jklb.onrender.com/signin", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: this.state.signInEmail,
-        password: this.state.signInPassword
-      })
+        email: signInEmail,
+        password: signInPassword,
+      }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -38,8 +35,8 @@ class Signin extends Component {
       .then((user) => {
         if (user.id) {
           console.log(user);
-          this.props.loadUser(user);
-          this.props.onRouteChange("home");
+          loadUser(user);
+          onRouteChange("home");
         } else {
           console.error("Error logging in, email or password incorrect.");
         }
@@ -49,71 +46,65 @@ class Signin extends Component {
       });
   };
 
-  render() {
-    const { onRouteChange } = this.props;
-
-    return (
-      <form className="d-center text-center">
-        <div
-          style={{ background: "rgba(255, 255, 255, 0.1)", width: "30rem" }}
-          className="border border-1 p-5 rounded shadow "
-          children="card"
-        >
-          <h1 className="mb-4 fw-bold">Sign In</h1>
-          {/* Email */}
-          <div className="form-floating mb-3">
-            <input
-              type="email"
-              className="form-control"
-              id="floatingInput"
-              placeholder="name@example.com"
-              name="email"
-              onChange={this.onEmailChange}
-              autoComplete="email"
-              required
-            />
-            <label htmlFor="floatingInput">Email address</label>
-          </div>
-
-          {/* Password */}
-          <div className="form-floating">
-            <input
-              type="password"
-              className="form-control"
-              id="floatingPassword"
-              placeholder="Password"
-              name="current-password"
-              onChange={this.onPasswordChange}
-              autoComplete="current-password"
-              required
-            />
-            <label htmlFor="floatingPassword">Password</label>
-          </div>
-
-          {/* Button */}
-          <div className="d-center d-block mt-3">
-            <button
-              type="submit"
-              className="btn btn-primary px-5 mb-3 fs-5"
-              onClick={this.onSubmitSignIn}
-            >
-              Sign in
-            </button>
-            <p
-              className="cursor-pointer fs-5"
-              onClick={() => onRouteChange("register")}
-            >
-              Register
-            </p>
-          </div>
-          <div style={{ fontSize: "12px" }}>
-            <p className="mb-0 fw-bold">For email type: test</p>
-            <p className="mb-0 fw-bold ">For password type: test</p>
-          </div>
+  return (
+    <form className="d-center text-center" onSubmit={onSubmitSignIn}>
+      <div
+        style={{ background: "rgba(255, 255, 255, 0.1)", width: "30rem" }}
+        className="border border-1 p-5 rounded shadow"
+      >
+        <h1 className="mb-4 fw-bold">Sign In</h1>
+        {/* Email */}
+        <div className="form-floating mb-3">
+          <input
+            type="email"
+            className="form-control"
+            id="floatingInput"
+            placeholder="name@example.com"
+            value={signInEmail} // Use the state variable for value
+            onChange={onEmailChange} // Update state on change
+            autoComplete="email"
+            required
+          />
+          <label htmlFor="floatingInput">Email address</label>
         </div>
-      </form>
-    );
-  }
-}
+
+        {/* Password */}
+        <div className="form-floating">
+          <input
+            type="password"
+            className="form-control"
+            id="floatingPassword"
+            placeholder="Password"
+            value={signInPassword} // Use the state variable for value
+            onChange={onPasswordChange} // Update state on change
+            autoComplete="current-password"
+            required
+          />
+          <label htmlFor="floatingPassword">Password</label>
+        </div>
+
+        {/* Button */}
+        <div className="d-center d-block mt-3">
+          <button
+            type="submit"
+            className="btn btn-primary px-5 mb-3 fs-5"
+          >
+            Sign in
+          </button>
+          <p
+            className="cursor-pointer fs-5"
+            onClick={() => onRouteChange("register")}
+          >
+            Register
+          </p>
+        </div>
+        <div style={{ fontSize: "12px" }}>
+          <p className="mb-0 fw-bold">For email type: test</p>
+          <p className="mb-0 fw-bold">For password type: test</p>
+        </div>
+      </div>
+    </form>
+  );
+};
 
 export default Signin;

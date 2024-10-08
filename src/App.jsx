@@ -1,5 +1,4 @@
-import React from "react";
-import { Component } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
@@ -10,50 +9,40 @@ import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
 
-const initialState = {
-  input: "",
-  imageUrl: "",
-  box: {},
-  route: "signin",
-  isSignedIn: false,
-  user: {
-    id: "",
-    name: "",
-    email: "",
-    entries: 0,
-    joined: ""
-  }
+const initialUserState = {
+  id: "",
+  name: "",
+  email: "",
+  entries: 0,
+  joined: ""
 };
 
-// App component
-class App extends Component {
-  constructor() {
-    super();
-    this.state = initialState;
-  }
+const App = () => {
+  const [input, setInput] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [box, setBox] = useState({});
+  const [route, setRoute] = useState("signin");
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState(initialUserState);
 
-  loadUser = (userToLoad) => {
-    this.setState({
-      user: {
-        id: userToLoad.id,
-        name: userToLoad.name,
-        email: userToLoad.email,
-        entries: userToLoad.entries,
-        joined: userToLoad.joined
-      }
-    });
+  const loadUser = (userToLoad) => {
+    setUser(userToLoad);
   };
 
-  onRouteChange = (route) => {
+  const onRouteChange = (route) => {
     if (route === "signin") {
-      this.setState(initialState);
+      setInput("");
+      setImageUrl("");
+      setBox({});
+      setIsSignedIn(false);
+      setUser(initialUserState);
     } else if (route === "home") {
-      this.setState({ isSignedIn: true });
+      setIsSignedIn(true);
     }
-    this.setState({ route: route });
+    setRoute(route);
   };
 
-  calculateFaceLocation = (data) => {
+  const calculateFaceLocation = (data) => {
     const clarifaiFace =
       data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById("inputImage");
@@ -67,116 +56,85 @@ class App extends Component {
       bottomRow: height - clarifaiFace.bottom_row * height
     };
 
-    console.log(box);
-
     return box;
   };
 
-  displayFaceBox = (box) => {
-    this.setState({ box: box });
+  const displayFaceBox = (box) => {
+    setBox(box);
   };
 
-  onInputChange = (event) => {
-    this.setState({ input: event.target.value });
+  const onInputChange = (event) => {
+    setInput(event.target.value);
   };
 
-  onButtonSubmit = () => {
-    this.setState(
-      {
-        imageUrl: this.state.input
+  const onButtonSubmit = () => {
+    setImageUrl(input);
+
+    fetch("https://smart-brain-api-jklb.onrender.com/imageurl", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
       },
-      () => {
-        // Here we make a request to our server that will make a request to the Clarifai API
-        // in order to hide the API KEY.
-        fetch("https://smart-brain-api-jklb.onrender.com/imageurl", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            input: this.state.input
+      body: JSON.stringify({
+        input: input
+      })
+    })
+      .then((data) => data.json())
+      .then((result) => {
+        if (result.status.code === 10000) {
+          fetch("https://smart-brain-api-jklb.onrender.com/image", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: user.id
+            })
           })
-        })
-          .then((data) => {
-            return data.json();
-          })
-          .then((result) => {
-            console.log(result);
+            .then((res) => res.json())
+            .then((entries) => {
+              setUser((prevUser) => ({ ...prevUser, entries }));
+            })
+            .catch((err) =>
+              console.log("Error fetching entries' user from our server api")
+            );
 
-            if (result.status.code === 10000) {
-              // Increment the entries if api gives us a valid response.
-              fetch("https://smart-brain-api-jklb.onrender.com/image", {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  id: this.state.user.id
-                })
-              })
-                .then((res) => res.json())
-                .then((entries) => {
-                  this.setState(Object.assign(this.state.user, { entries }));
-                })
-                .catch((err) =>
-                  console.log("Error fetching entries'user from our server api")
-                );
-
-              this.displayFaceBox(this.calculateFaceLocation(result));
-            } else {
-              console.log("You should enter a valid HTTPS URL");
-            }
-          })
-          .catch((error) =>
-            console.log("Error fetching data from Clarifai API", error)
-          );
-      }
-    );
+          displayFaceBox(calculateFaceLocation(result));
+        } else {
+          console.log("You should enter a valid HTTPS URL");
+        }
+      })
+      .catch((error) =>
+        console.log("Error fetching data from Clarifai API", error)
+      );
   };
 
-  render() {
-    let content;
-    const { route, imageUrl, box, isSignedIn } = this.state;
-
-    if (route === "signin") {
-      content = (
-        <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-      );
-    } else if (route === "home") {
-      content = (
-        <div>
-          <Logo></Logo>
-          <Rank
-            entries={this.state.user.entries}
-            name={this.state.user.name}
-          ></Rank>
-          <ImageLinkForm
-            onInputChange={this.onInputChange}
-            onButtonSubmit={this.onButtonSubmit}
-          ></ImageLinkForm>
-          <FaceRecognition imageUrl={imageUrl} box={box}></FaceRecognition>
-        </div>
-      );
-    } else if (route === "register") {
-      content = (
-        <Register
-          loadUser={this.loadUser}
-          onRouteChange={this.onRouteChange}
-        ></Register>
-      );
-    }
-
-    return (
-      <div className="container my-5">
-        <ParticlesBg type="cobweb" bg={true} num={50} />
-        <Navigation
-          onRouteChange={this.onRouteChange}
-          isSignedIn={isSignedIn}
-        ></Navigation>
-        {content}
+  let content;
+  if (route === "signin") {
+    content = <Signin loadUser={loadUser} onRouteChange={onRouteChange} />;
+  } else if (route === "home") {
+    content = (
+      <div>
+        <Logo />
+        <Rank entries={user.entries} name={user.name} />
+        <ImageLinkForm
+          onInputChange={onInputChange}
+          onButtonSubmit={onButtonSubmit}
+        />
+        <FaceRecognition imageUrl={imageUrl} box={box} />
       </div>
     );
+  } else if (route === "register") {
+    content = <Register loadUser={loadUser} onRouteChange={onRouteChange} />;
   }
-}
+
+  return (
+    <div className="container my-5">
+      <ParticlesBg type="cobweb" bg={true} num={50} />
+      <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn} />
+      {content}
+    </div>
+  );
+};
 
 export default App;
