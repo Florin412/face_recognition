@@ -1,3 +1,4 @@
+import React from "react";
 import { Component } from "react";
 import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
