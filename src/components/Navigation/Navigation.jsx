@@ -1,44 +1,44 @@
 import "./Navigation.css";
+import { useNavigate } from "react-router-dom";
 
-const Navigation = ({ onRouteChange, isSignedIn }) => {
+const Navigation = ({ isSignedIn, onSignOut }) => {
+  const navigate = useNavigate(); // Hook pentru navigare
+
+  const handleSignOut = () => {
+    // Aici poți adăuga logica de delogare, dacă este necesar.
+    // De exemplu, poți șterge token-urile de autentificare sau datele utilizatorului.
+    onSignOut(); // Apelăm funcția onSignOut pentru a actualiza starea de autentificare
+    navigate("/signin"); // Navigare către pagina de Signin
+  };
+
   if (isSignedIn) {
-    //  If we are signed in the app, we should have the option to sign out.
+    // Dacă utilizatorul este autentificat, arătăm opțiunea de Sign out.
     return (
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "flex-end"
-        }}
-      >
+      <nav style={{ display: "flex", justifyContent: "flex-end" }}>
         <p
-          className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0 "
-          onClick={() => onRouteChange("signin")}
+          className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0"
+          onClick={handleSignOut}
         >
           Sign out
         </p>
       </nav>
     );
   } else {
-    //  If we are signed out the app, we should have the option to sign in or register.
+    // Dacă utilizatorul nu este autentificat, arătăm opțiunile de Sign in și Register.
     return (
-      <nav
-        style={{
-          display: "flex",
-          justifyContent: "flex-end"
-        }}
-      >
+      <nav style={{ display: "flex", justifyContent: "flex-end" }}>
         <p
-          className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0 "
-          onClick={() => onRouteChange("signin")}
+          className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0"
+          onClick={() => navigate("/signin")} // Navigare către pagina de Signin
         >
           Sign in
         </p>
 
         <p
-          className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0 "
-          onClick={() => onRouteChange("register")}
+          className="fs-3 btn-link cursor p-3 text-dark opacity-hover mb-0"
+          onClick={() => navigate("/register")} // Navigare către pagina de Register
         >
-          Resister
+          Register
         </p>
       </nav>
     );

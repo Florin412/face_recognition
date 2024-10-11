@@ -1,24 +1,27 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Register = ({ loadUser, onRouteChange }) => {
+const Register = ({ loadUser, onSignIn, connectionToBackendLink }) => {
   // Define state variables for name, email, and password
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate(); // Hook pentru navigare
+
   const onRegisterSubmit = (event) => {
     event.preventDefault(); // Prevent the default form submission
 
-    fetch("https://smart-brain-api-jklb.onrender.com/register", {
+    fetch(connectionToBackendLink + "register", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         name: name,
         email: email,
-        password: password,
-      }),
+        password: password
+      })
     })
       .then((res) => {
         if (!res.ok) {
@@ -30,7 +33,8 @@ const Register = ({ loadUser, onRouteChange }) => {
         if (user.id) {
           console.log(user);
           loadUser(user);
-          onRouteChange("home");
+          onSignIn(); // Trigger the sign-in action
+          navigate("/home"); // Navigare la pagina de Home după înregistrare reușită
         } else {
           console.log("Unable to register. User ID not received.");
         }
@@ -96,10 +100,7 @@ const Register = ({ loadUser, onRouteChange }) => {
 
         {/* Button */}
         <div className="d-center d-block mt-3">
-          <button
-            type="submit"
-            className="btn btn-primary px-5 mb-3 fs-5"
-          >
+          <button type="submit" className="btn btn-primary px-5 mb-3 fs-5">
             Register
           </button>
         </div>

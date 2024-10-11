@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Signin = ({ loadUser, onRouteChange }) => {
+const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
   // Define state variables for email and password
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
+
+  const navigate = useNavigate(); // Hook pentru navigare
 
   const onEmailChange = (event) => {
     setSignInEmail(event.target.value);
@@ -16,15 +19,15 @@ const Signin = ({ loadUser, onRouteChange }) => {
   const onSubmitSignIn = (event) => {
     event.preventDefault(); // Prevent default form submission
 
-    fetch("https://smart-brain-api-jklb.onrender.com/signin", {
+    fetch(connectionToBackendLink + "signin", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         email: signInEmail,
-        password: signInPassword,
-      }),
+        password: signInPassword
+      })
     })
       .then((response) => {
         if (!response.ok) {
@@ -36,7 +39,8 @@ const Signin = ({ loadUser, onRouteChange }) => {
         if (user.id) {
           console.log(user);
           loadUser(user);
-          onRouteChange("home");
+          onSignIn(); // Trigger the sign-in action
+          navigate("/home"); // Navigare către pagina de Home după autentificare
         } else {
           console.error("Error logging in, email or password incorrect.");
         }
@@ -85,22 +89,15 @@ const Signin = ({ loadUser, onRouteChange }) => {
 
         {/* Button */}
         <div className="d-center d-block mt-3">
-          <button
-            type="submit"
-            className="btn btn-primary px-5 mb-3 fs-5"
-          >
+          <button type="submit" className="btn btn-primary px-5 mb-3 fs-5">
             Sign in
           </button>
           <p
             className="cursor-pointer fs-5"
-            onClick={() => onRouteChange("register")}
+            onClick={() => navigate("/register")} // Navigare la pagina de Register
           >
             Register
           </p>
-        </div>
-        <div style={{ fontSize: "12px" }}>
-          <p className="mb-0 fw-bold">For email type: test</p>
-          <p className="mb-0 fw-bold">For password type: test</p>
         </div>
       </div>
     </form>

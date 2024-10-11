@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
@@ -8,6 +8,17 @@ import ParticlesBg from "particles-bg";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
+import { localHostServerLink, hostedServerLink } from "./URL_Links";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate
+} from "react-router-dom";
+
+// Acum suntem în modul de dezvoltare, deci folosim localhost.
+// Schimbă această valoare când aplici pe un server de producție.
+const connectionToBackendLink = localHostServerLink;
 
 const initialUserState = {
   id: "",
@@ -21,7 +32,6 @@ const App = () => {
   const [input, setInput] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [box, setBox] = useState({});
-  const [route, setRoute] = useState("signin");
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState(initialUserState);
 
@@ -29,17 +39,13 @@ const App = () => {
     setUser(userToLoad);
   };
 
-  const onRouteChange = (route) => {
-    if (route === "signin") {
-      setInput("");
-      setImageUrl("");
-      setBox({});
-      setIsSignedIn(false);
-      setUser(initialUserState);
-    } else if (route === "home") {
-      setIsSignedIn(true);
-    }
-    setRoute(route);
+  const onSignOut = () => {
+    // clear all the stored data about the previous user when sign out the app.
+    setIsSignedIn(false);
+    setUser(initialUserState); // Reset user state on sign out
+    setInput("");
+    setImageUrl("");
+    setBox("");
   };
 
   const calculateFaceLocation = (data) => {
@@ -70,7 +76,7 @@ const App = () => {
   const onButtonSubmit = () => {
     setImageUrl(input);
 
-    fetch("https://smart-brain-api-jklb.onrender.com/imageurl", {
+    fetch(connectionToBackendLink + "imageurl", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -82,7 +88,7 @@ const App = () => {
       .then((data) => data.json())
       .then((result) => {
         if (result.status.code === 10000) {
-          fetch("https://smart-brain-api-jklb.onrender.com/image", {
+          fetch(connectionToBackendLink + "image", {
             method: "PUT",
             headers: {
               "Content-Type": "application/json"
@@ -109,31 +115,57 @@ const App = () => {
       );
   };
 
-  let content;
-  if (route === "signin") {
-    content = <Signin loadUser={loadUser} onRouteChange={onRouteChange} />;
-  } else if (route === "home") {
-    content = (
-      <div>
-        <Logo />
-        <Rank entries={user.entries} name={user.name} />
-        <ImageLinkForm
-          onInputChange={onInputChange}
-          onButtonSubmit={onButtonSubmit}
-        />
-        <FaceRecognition imageUrl={imageUrl} box={box} />
-      </div>
-    );
-  } else if (route === "register") {
-    content = <Register loadUser={loadUser} onRouteChange={onRouteChange} />;
-  }
-
   return (
-    <div className="container my-5">
-      <ParticlesBg type="cobweb" bg={true} num={50} />
-      <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn} />
-      {content}
-    </div>
+    <Router>
+      <div className="container my-5">
+        <ParticlesBg type="cobweb" bg={true} num={50} />
+        <Navigation isSignedIn={isSignedIn} onSignOut={onSignOut} />
+
+        <Routes>
+          {/* Redirecționare de la / la /signin */}
+          <Route path="/" element={<Navigate to="/signin" />} />
+
+          <Route
+            path="/signin"
+            element={
+              <Signin
+                loadUser={loadUser}
+                connectionToBackendLink={connectionToBackendLink}
+                onSignIn={() => setIsSignedIn(true)} // Actualizează starea isSignedIn la true la autentificare
+              />
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Register
+                loadUser={loadUser}
+                onSignIn={() => setIsSignedIn(true)} // Actualizează starea isSignedIn la true la autentificare
+                connectionToBackendLink={connectionToBackendLink}
+              />
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              isSignedIn ? (
+                <div>
+                  <Logo />
+                  <Rank entries={user.entries} name={user.name} />
+                  <ImageLinkForm
+                    onInputChange={onInputChange}
+                    onButtonSubmit={onButtonSubmit}
+                  />
+                  <FaceRecognition imageUrl={imageUrl} box={box} />
+                </div>
+              ) : (
+                <Navigate to="/signin" /> // Redirecționează la /signin dacă utilizatorul nu este autentificat
+              )
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 
