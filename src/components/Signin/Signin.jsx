@@ -40,11 +40,14 @@ const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
         }
         return response.json();
       })
-      .then((user) => {
-        if (user.id) {
-          loadUser(user);
+      .then((data) => {
+        if (data.user.id) {
+          loadUser(data.user);
           onSignIn(); // Trigger the sign-in action
           navigate("/home"); // Navigare către pagina de Home după autentificare
+
+          // Stocăm token-ul în localStorage
+          localStorage.setItem("token", data.token);
         } else {
           setErrorMessage("Email or password incorrect."); // Afișare mesaj de eroare dacă autentificarea nu reușește
         }

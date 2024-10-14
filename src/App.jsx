@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
 import Logo from "./components/Logo/Logo";
@@ -15,6 +15,7 @@ import {
   Routes,
   Navigate
 } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // We are currently in development mode, so we're using localhost.
 // Change this value when deploying to a production server.
@@ -35,6 +36,63 @@ const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState(initialUserState);
 
+  let navigate = useNavigate();
+
+  const getUserProfile = (token) => {
+    fetch(connectionToBackendLink + "profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then((response) => {
+        console.log(response);
+        if (!response.ok) {
+          throw new Error("Eroare la preluarea profilului utilizatorului");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Profil utilizator:", data);
+        loadUser(data);
+        setIsSignedIn(true);
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.error("Eroare:", error);
+      });
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // Trimite o cerere către server pentru a verifica tokenul
+      fetch(connectionToBackendLink + "verify-token", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Verificam daca tokenul este valid si neexpirat.
+          if (data.valid) {
+            console.log(data);
+            // daca tokenul e ok, atunci facem un request catre server sa vedem care sunt datele userului care a creat tokenul.
+            getUserProfile(token);
+          } else {
+            // localStorage.removeItem("token"); // Token invalid, îl eliminăm
+          }
+        })
+        .catch((err) => {
+          console.error("Eroare la verificarea tokenului:", err);
+          localStorage.removeItem("token");
+        });
+    }
+  }, []);
+
   const loadUser = (userToLoad) => {
     setUser(userToLoad);
   };
@@ -46,6 +104,7 @@ const App = () => {
     setInput("");
     setImageUrl("");
     setArrayOfBoxes([]);
+    localStorage.removeItem("token");
   };
 
   const calculateFaceLocation = (data) => {
@@ -81,11 +140,13 @@ const App = () => {
 
   const onButtonSubmit = () => {
     setImageUrl(input);
+    const token = localStorage.getItem("token");
 
     fetch(connectionToBackendLink + "imageurl", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
         input: input
@@ -97,7 +158,8 @@ const App = () => {
           fetch(connectionToBackendLink + "image", {
             method: "PUT",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
               id: user.id
@@ -145,6 +207,7 @@ const App = () => {
               />
             }
           />
+
           <Route
             path="/register"
             element={
