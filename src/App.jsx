@@ -36,7 +36,7 @@ const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState(initialUserState);
 
-  let navigate = useNavigate();
+  //let navigate = useNavigate();
 
   const getUserProfile = (token) => {
     fetch(connectionToBackendLink + "profile", {
@@ -57,7 +57,7 @@ const App = () => {
         console.log("Profil utilizator:", data);
         loadUser(data);
         setIsSignedIn(true);
-        navigate("/home");
+        //navigate("/home");
       })
       .catch((error) => {
         console.error("Eroare:", error);
