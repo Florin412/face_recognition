@@ -6,6 +6,8 @@ const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
 
+  const [errorMessage, setErrorMessage] = useState(""); // State pentru mesajul de eroare
+
   const navigate = useNavigate(); // Hook pentru navigare
 
   const onEmailChange = (event) => {
@@ -18,6 +20,9 @@ const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
 
   const onSubmitSignIn = (event) => {
     event.preventDefault(); // Prevent default form submission
+
+    // Reset error message before making a new request
+    setErrorMessage("");
 
     fetch(connectionToBackendLink + "signin", {
       method: "POST",
@@ -37,16 +42,16 @@ const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
       })
       .then((user) => {
         if (user.id) {
-          console.log(user);
           loadUser(user);
           onSignIn(); // Trigger the sign-in action
           navigate("/home"); // Navigare către pagina de Home după autentificare
         } else {
-          console.error("Error logging in, email or password incorrect.");
+          setErrorMessage("Email or password incorrect."); // Afișare mesaj de eroare dacă autentificarea nu reușește
         }
       })
       .catch((error) => {
         console.error("Login error:", error);
+        setErrorMessage("Email or password incorrect. Please try again."); // Setează mesajul de eroare
       });
   };
 
@@ -86,6 +91,11 @@ const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
           />
           <label htmlFor="floatingPassword">Password</label>
         </div>
+
+        {/* Error Message */}
+        {errorMessage && (
+          <p className="text-danger mt-3 fw-bold">{errorMessage}</p> // Afișează mesajul de eroare
+        )}
 
         {/* Button */}
         <div className="d-center d-block mt-3">

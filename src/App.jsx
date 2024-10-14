@@ -16,8 +16,8 @@ import {
   Navigate
 } from "react-router-dom";
 
-// Acum suntem în modul de dezvoltare, deci folosim localhost.
-// Schimbă această valoare când aplici pe un server de producție.
+// We are currently in development mode, so we're using localhost.
+// Change this value when deploying to a production server.
 const connectionToBackendLink = localHostServerLink;
 
 const initialUserState = {
@@ -31,7 +31,7 @@ const initialUserState = {
 const App = () => {
   const [input, setInput] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [box, setBox] = useState({});
+  const [arrayOfBoxes, setArrayOfBoxes] = useState([]);
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState(initialUserState);
 
@@ -45,28 +45,34 @@ const App = () => {
     setUser(initialUserState); // Reset user state on sign out
     setInput("");
     setImageUrl("");
-    setBox("");
+    setArrayOfBoxes([]);
   };
 
   const calculateFaceLocation = (data) => {
-    const clarifaiFace =
-      data.outputs[0].data.regions[0].region_info.bounding_box;
+    const arrayOfBoxes = [];
     const image = document.getElementById("inputImage");
     const width = Number(image.width);
     const height = Number(image.height);
 
-    const box = {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - clarifaiFace.right_col * width,
-      bottomRow: height - clarifaiFace.bottom_row * height
-    };
+    // Here we iterete throw all faces returned by API, and calculate the face coordonates for each face.
+    data.outputs[0].data.regions.forEach((element) => {
+      const clarifaiFace = element.region_info.bounding_box;
 
-    return box;
+      const box = {
+        leftCol: clarifaiFace.left_col * width,
+        topRow: clarifaiFace.top_row * height,
+        rightCol: width - clarifaiFace.right_col * width,
+        bottomRow: height - clarifaiFace.bottom_row * height
+      };
+
+      arrayOfBoxes.push(box);
+    });
+
+    return arrayOfBoxes;
   };
 
-  const displayFaceBox = (box) => {
-    setBox(box);
+  const displayFaceBox = (arrayOfBoxes) => {
+    setArrayOfBoxes(arrayOfBoxes);
   };
 
   const onInputChange = (event) => {
@@ -106,6 +112,10 @@ const App = () => {
             );
 
           displayFaceBox(calculateFaceLocation(result));
+        } else if (result.status.code === 30002) {
+          alert(
+            "The image processing failed, as some URLs restrict downloads. Try with a different image URL."
+          );
         } else {
           console.log("You should enter a valid HTTPS URL");
         }
@@ -118,11 +128,11 @@ const App = () => {
   return (
     <Router>
       <div className="container my-5">
-        <ParticlesBg type="cobweb" bg={true} num={50} />
+        <ParticlesBg type="cobweb" bg={true} num={25} />
         <Navigation isSignedIn={isSignedIn} onSignOut={onSignOut} />
 
         <Routes>
-          {/* Redirecționare de la / la /signin */}
+          {/* Redirect from / to /signin */}
           <Route path="/" element={<Navigate to="/signin" />} />
 
           <Route
@@ -131,7 +141,7 @@ const App = () => {
               <Signin
                 loadUser={loadUser}
                 connectionToBackendLink={connectionToBackendLink}
-                onSignIn={() => setIsSignedIn(true)} // Actualizează starea isSignedIn la true la autentificare
+                onSignIn={() => setIsSignedIn(true)} // Update the isSignedIn state to true upon authentication
               />
             }
           />
@@ -140,7 +150,7 @@ const App = () => {
             element={
               <Register
                 loadUser={loadUser}
-                onSignIn={() => setIsSignedIn(true)} // Actualizează starea isSignedIn la true la autentificare
+                onSignIn={() => setIsSignedIn(true)} // Update the isSignedIn state to true upon authentication
                 connectionToBackendLink={connectionToBackendLink}
               />
             }
@@ -156,10 +166,13 @@ const App = () => {
                     onInputChange={onInputChange}
                     onButtonSubmit={onButtonSubmit}
                   />
-                  <FaceRecognition imageUrl={imageUrl} box={box} />
+                  <FaceRecognition
+                    imageUrl={imageUrl}
+                    arrayOfBoxes={arrayOfBoxes}
+                  />
                 </div>
               ) : (
-                <Navigate to="/signin" /> // Redirecționează la /signin dacă utilizatorul nu este autentificat
+                <Navigate to="/signin" /> // Redirect to /signin if the user is not authenticated
               )
             }
           />

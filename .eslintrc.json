@@ -1,5 +1,5 @@
 {
-  "parser": "eslint-parser",
+  //"parser": "eslint-parser",
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
