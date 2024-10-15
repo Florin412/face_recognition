@@ -12,24 +12,36 @@ import { localHostServerLink } from "./URL_Links";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+// Redux imports.
+import { Provider } from "react-redux";
+import store from "./redux/store";
+import { signIn } from "./redux/store";
+import { useSelector, useDispatch } from "react-redux";
+
+// Import redux actions.
+import { signOut, updateEntries } from "./redux/actions/actions";
+
 const connectionToBackendLink = localHostServerLink;
 
-const initialUserState = {
-  id: "",
-  name: "",
-  email: "",
-  entries: 0,
-  joined: ""
-};
+// const initialUserState = {
+//   id: "",
+//   name: "",
+//   email: "",
+//   entries: 0,
+//   joined: ""
+// };
 
 const App = () => {
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
+
+  // Get the state from Redux Store.
+  const { isSignedIn, user } = useSelector((state) => state.user);
+
+  // Local States.
   const [input, setInput] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [arrayOfBoxes, setArrayOfBoxes] = useState([]);
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState(initialUserState);
-
-  let navigate = useNavigate();
 
   const getUserProfile = (token) => {
     fetch(connectionToBackendLink + "profile", {
@@ -46,8 +58,9 @@ const App = () => {
         return response.json();
       })
       .then((data) => {
-        loadUser(data);
-        setIsSignedIn(true);
+        dispatch(signIn(data));
+        // loadUser(data);
+        // setIsSignedIn(true);
         navigate("/home");
       })
       .catch((error) => {
@@ -80,13 +93,15 @@ const App = () => {
     }
   }, []);
 
-  const loadUser = (userToLoad) => {
-    setUser(userToLoad);
-  };
+  // const loadUser = (userToLoad) => {
+  //   setUser(userToLoad);
+  // };
 
   const onSignOut = () => {
-    setIsSignedIn(false);
-    setUser(initialUserState);
+    // Clear the user's data from redux store.
+    dispatch(signOut());
+
+    // Clear local state data.
     setInput("");
     setImageUrl("");
     setArrayOfBoxes([]);
@@ -151,7 +166,10 @@ const App = () => {
           })
             .then((res) => res.json())
             .then((entries) => {
-              setUser((prevUser) => ({ ...prevUser, entries }));
+              // now we update the entries field in redux store
+              dispatch(updateEntries(newEntries));
+
+              // setUser((prevUser) => ({ ...prevUser, entries }));
             })
             .catch((err) =>
               console.log("Error fetching entries' user from our server api")
@@ -172,62 +190,56 @@ const App = () => {
   };
 
   return (
-    <div>
-      <Navigation isSignedIn={isSignedIn} onSignOut={onSignOut} />
+    <Provider store={store}>
+      <div>
+        <Navigation isSignedIn={isSignedIn} onSignOut={onSignOut} />
 
-      <Routes>
-        <Route
-          path="/"
-          element={<Navigate to={isSignedIn ? "/home" : "/signin"} />}
-        />
-        <Route
-          path="/signin"
-          element={
-            <Signin
-              loadUser={loadUser}
-              connectionToBackendLink={connectionToBackendLink}
-              onSignIn={() => setIsSignedIn(true)}
-            />
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <Register
-              loadUser={loadUser}
-              connectionToBackendLink={connectionToBackendLink}
-              onSignIn={() => setIsSignedIn(true)}
-            />
-          }
-        />
-        <Route
-          path="/home"
-          element={
-            isSignedIn ? (
-              <div>
-                <ParticlesBg type="cobweb" bg={true} num={25} />
-                <Logo />
-                <Rank entries={user.entries} name={user.name} />
-                <ImageLinkForm
-                  onInputChange={onInputChange}
-                  onButtonSubmit={onButtonSubmit}
-                />
-                <FaceRecognition
-                  imageUrl={imageUrl}
-                  arrayOfBoxes={arrayOfBoxes}
-                />
-              </div>
-            ) : (
-              <Navigate to="/signin" />
-            )
-          }
-        />
-        <Route
-          path="*"
-          element={<Navigate to={isSignedIn ? "/home" : "/signin"} />}
-        />
-      </Routes>
-    </div>
+        <Routes>
+          <Route
+            path="/"
+            element={<Navigate to={isSignedIn ? "/home" : "/signin"} />}
+          />
+          <Route
+            path="/signin"
+            element={
+              <Signin connectionToBackendLink={connectionToBackendLink} />
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <Register connectionToBackendLink={connectionToBackendLink} />
+            }
+          />
+          <Route
+            path="/home"
+            element={
+              isSignedIn ? (
+                <div>
+                  <ParticlesBg type="cobweb" bg={true} num={25} />
+                  <Logo />
+                  <Rank entries={user.entries} name={user.name} />
+                  <ImageLinkForm
+                    onInputChange={onInputChange}
+                    onButtonSubmit={onButtonSubmit}
+                  />
+                  <FaceRecognition
+                    imageUrl={imageUrl}
+                    arrayOfBoxes={arrayOfBoxes}
+                  />
+                </div>
+              ) : (
+                <Navigate to="/signin" />
+              )
+            }
+          />
+          <Route
+            path="*"
+            element={<Navigate to={isSignedIn ? "/home" : "/signin"} />}
+          />
+        </Routes>
+      </div>
+    </Provider>
   );
 };
 
