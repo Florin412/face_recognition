@@ -29,12 +29,15 @@ const Register = ({ loadUser, onSignIn, connectionToBackendLink }) => {
         }
         return res.json();
       })
-      .then((user) => {
-        if (user.id) {
-          console.log(user);
-          loadUser(user);
+      .then((data) => {
+        if (data.user.id) {
+          console.log(data.user);
+          loadUser(data.user);
           onSignIn(); // Trigger the sign-in action
           navigate("/home"); // Navigare la pagina de Home după înregistrare reușită
+
+          // Stocăm token-ul în localStorage
+          localStorage.setItem("token", data.token);
         } else {
           console.log("Unable to register. User ID not received.");
         }

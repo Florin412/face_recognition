@@ -8,17 +8,10 @@ import ParticlesBg from "particles-bg";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
-import { localHostServerLink, hostedServerLink } from "./URL_Links";
-import {
-  BrowserRouter as Router,
-  Route,
-  Routes,
-  Navigate
-} from "react-router-dom";
+import { localHostServerLink } from "./URL_Links";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-// We are currently in development mode, so we're using localhost.
-// Change this value when deploying to a production server.
 const connectionToBackendLink = localHostServerLink;
 
 const initialUserState = {
@@ -36,7 +29,7 @@ const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState(initialUserState);
 
-  //let navigate = useNavigate();
+  let navigate = useNavigate();
 
   const getUserProfile = (token) => {
     fetch(connectionToBackendLink + "profile", {
@@ -47,17 +40,15 @@ const App = () => {
       }
     })
       .then((response) => {
-        console.log(response);
         if (!response.ok) {
           throw new Error("Eroare la preluarea profilului utilizatorului");
         }
         return response.json();
       })
       .then((data) => {
-        console.log("Profil utilizator:", data);
         loadUser(data);
         setIsSignedIn(true);
-        //navigate("/home");
+        navigate("/home");
       })
       .catch((error) => {
         console.error("Eroare:", error);
@@ -68,7 +59,6 @@ const App = () => {
     const token = localStorage.getItem("token");
 
     if (token) {
-      // Trimite o cerere către server pentru a verifica tokenul
       fetch(connectionToBackendLink + "verify-token", {
         method: "POST",
         headers: {
@@ -77,13 +67,10 @@ const App = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          // Verificam daca tokenul este valid si neexpirat.
           if (data.valid) {
-            console.log(data);
-            // daca tokenul e ok, atunci facem un request catre server sa vedem care sunt datele userului care a creat tokenul.
             getUserProfile(token);
           } else {
-            // localStorage.removeItem("token"); // Token invalid, îl eliminăm
+            localStorage.removeItem("token");
           }
         })
         .catch((err) => {
@@ -98,9 +85,8 @@ const App = () => {
   };
 
   const onSignOut = () => {
-    // clear all the stored data about the previous user when sign out the app.
     setIsSignedIn(false);
-    setUser(initialUserState); // Reset user state on sign out
+    setUser(initialUserState);
     setInput("");
     setImageUrl("");
     setArrayOfBoxes([]);
@@ -113,10 +99,8 @@ const App = () => {
     const width = Number(image.width);
     const height = Number(image.height);
 
-    // Here we iterete throw all faces returned by API, and calculate the face coordonates for each face.
     data.outputs[0].data.regions.forEach((element) => {
       const clarifaiFace = element.region_info.bounding_box;
-
       const box = {
         leftCol: clarifaiFace.left_col * width,
         topRow: clarifaiFace.top_row * height,
@@ -188,60 +172,62 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div className="container my-5">
-        <ParticlesBg type="cobweb" bg={true} num={25} />
-        <Navigation isSignedIn={isSignedIn} onSignOut={onSignOut} />
+    <div>
+      <Navigation isSignedIn={isSignedIn} onSignOut={onSignOut} />
 
-        <Routes>
-          {/* Redirect from / to /signin */}
-          <Route path="/" element={<Navigate to="/signin" />} />
-
-          <Route
-            path="/signin"
-            element={
-              <Signin
-                loadUser={loadUser}
-                connectionToBackendLink={connectionToBackendLink}
-                onSignIn={() => setIsSignedIn(true)} // Update the isSignedIn state to true upon authentication
-              />
-            }
-          />
-
-          <Route
-            path="/register"
-            element={
-              <Register
-                loadUser={loadUser}
-                onSignIn={() => setIsSignedIn(true)} // Update the isSignedIn state to true upon authentication
-                connectionToBackendLink={connectionToBackendLink}
-              />
-            }
-          />
-          <Route
-            path="/home"
-            element={
-              isSignedIn ? (
-                <div>
-                  <Logo />
-                  <Rank entries={user.entries} name={user.name} />
-                  <ImageLinkForm
-                    onInputChange={onInputChange}
-                    onButtonSubmit={onButtonSubmit}
-                  />
-                  <FaceRecognition
-                    imageUrl={imageUrl}
-                    arrayOfBoxes={arrayOfBoxes}
-                  />
-                </div>
-              ) : (
-                <Navigate to="/signin" /> // Redirect to /signin if the user is not authenticated
-              )
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
+      <Routes>
+        <Route
+          path="/"
+          element={<Navigate to={isSignedIn ? "/home" : "/signin"} />}
+        />
+        <Route
+          path="/signin"
+          element={
+            <Signin
+              loadUser={loadUser}
+              connectionToBackendLink={connectionToBackendLink}
+              onSignIn={() => setIsSignedIn(true)}
+            />
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <Register
+              loadUser={loadUser}
+              connectionToBackendLink={connectionToBackendLink}
+              onSignIn={() => setIsSignedIn(true)}
+            />
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            isSignedIn ? (
+              <div>
+                <ParticlesBg type="cobweb" bg={true} num={25} />
+                <Logo />
+                <Rank entries={user.entries} name={user.name} />
+                <ImageLinkForm
+                  onInputChange={onInputChange}
+                  onButtonSubmit={onButtonSubmit}
+                />
+                <FaceRecognition
+                  imageUrl={imageUrl}
+                  arrayOfBoxes={arrayOfBoxes}
+                />
+              </div>
+            ) : (
+              <Navigate to="/signin" />
+            )
+          }
+        />
+        <Route
+          path="*"
+          element={<Navigate to={isSignedIn ? "/home" : "/signin"} />}
+        />
+      </Routes>
+    </div>
   );
 };
 
