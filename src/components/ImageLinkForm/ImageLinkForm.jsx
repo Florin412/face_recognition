@@ -8,6 +8,12 @@ const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
         {"This Magic Brain will detect faces in your pictures. Give it a try."}
       </div>
 
+      <div className="h6 my-4">
+        {
+          "Find an image on Google -> right-click -> Copy Image Address -> insert that URL into the input below and press Detect"
+        }
+      </div>
+
       {/* Form */}
       <div className="d-center">
         <div

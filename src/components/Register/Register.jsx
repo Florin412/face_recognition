@@ -1,38 +1,26 @@
-import { Component } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-class Register extends Component {
-  constructor(props) {
-    super(props);
+const Register = ({ loadUser, onSignIn, connectionToBackendLink }) => {
+  // Define state variables for name, email, and password
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    this.state = {
-      name: "",
-      email: "",
-      password: ""
-    };
-  }
+  const navigate = useNavigate(); // Hook pentru navigare
 
-  onNameChange = (event) => {
-    this.setState({ name: event.target.value });
-  };
+  const onRegisterSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission
 
-  onEmailChange = (event) => {
-    this.setState({ email: event.target.value });
-  };
-
-  onPasswordChange = (event) => {
-    this.setState({ password: event.target.value });
-  };
-
-  onRegisterSubmit = () => {
-    fetch("https://smart-brain-api-jklb.onrender.com/register", {
+    fetch(connectionToBackendLink + "register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        name: this.state.name,
-        email: this.state.email,
-        password: this.state.password
+        name: name,
+        email: email,
+        password: password
       })
     })
       .then((res) => {
@@ -41,11 +29,15 @@ class Register extends Component {
         }
         return res.json();
       })
-      .then((user) => {
-        if (user.id) {
-          console.log(user);
-          this.props.loadUser(user);
-          this.props.onRouteChange("home");
+      .then((data) => {
+        if (data.user.id) {
+          console.log(data.user);
+          loadUser(data.user);
+          onSignIn(); // Trigger the sign-in action
+          navigate("/home"); // Navigare la pagina de Home după înregistrare reușită
+
+          // Stocăm token-ul în localStorage
+          localStorage.setItem("token", data.token);
         } else {
           console.log("Unable to register. User ID not received.");
         }
@@ -55,75 +47,69 @@ class Register extends Component {
       });
   };
 
-  render() {
-    return (
-      <form className="d-center text-center">
-        <div
-          style={{ background: "rgba(255, 255, 255, 0.1)", width: "30rem" }}
-          className="border border-1 p-5 rounded shadow "
-          children="card"
-        >
-          <h1 className="mb-4 fw-bold">Register</h1>
+  return (
+    <form className="d-center text-center" onSubmit={onRegisterSubmit}>
+      <div
+        style={{ background: "rgba(255, 255, 255, 0.1)", width: "30rem" }}
+        className="border border-1 p-5 rounded shadow"
+      >
+        <h1 className="mb-4 fw-bold">Register</h1>
 
-          {/* Name */}
-          <div className="form-floating mb-3">
-            <input
-              type="text"
-              className="form-control"
-              id="floatingName"
-              placeholder="Name"
-              name="name"
-              onChange={this.onNameChange}
-              autoComplete="name"
-              required
-            />
-            <label htmlFor="floatingName">Name</label>
-          </div>
-
-          {/* Email */}
-          <div className="form-floating mb-3">
-            <input
-              type="email"
-              className="form-control"
-              id="floatingEmail"
-              placeholder="name@example.com"
-              name="email"
-              onChange={this.onEmailChange}
-              autoComplete="email"
-              required
-            />
-            <label htmlFor="floatingEmail">Email address</label>
-          </div>
-
-          {/* Password */}
-          <div className="form-floating">
-            <input
-              type="password"
-              className="form-control"
-              id="floatingPassword"
-              placeholder="Password"
-              onChange={this.onPasswordChange}
-              name="new-password"
-              autoComplete="new-password"
-              required
-            />
-            <label htmlFor="floatingPassword">Password</label>
-          </div>
-
-          {/* Button */}
-          <div className="d-center d-block mt-3">
-            <button
-              type="submit"
-              className="btn btn-primary px-5 mb-3 fs-5"
-              onClick={this.onRegisterSubmit}
-            >
-              Register
-            </button>
-          </div>
+        {/* Name */}
+        <div className="form-floating mb-3">
+          <input
+            type="text"
+            className="form-control"
+            id="floatingName"
+            placeholder="Name"
+            value={name} // Use the state variable for value
+            onChange={(e) => setName(e.target.value)} // Update state on change
+            autoComplete="name"
+            required
+          />
+          <label htmlFor="floatingName">Name</label>
         </div>
-      </form>
-    );
-  }
-}
+
+        {/* Email */}
+        <div className="form-floating mb-3">
+          <input
+            type="email"
+            className="form-control"
+            id="floatingEmail"
+            placeholder="name@example.com"
+            value={email} // Use the state variable for value
+            onChange={(e) => setEmail(e.target.value)} // Update state on change
+            autoComplete="email"
+            required
+          />
+          <label htmlFor="floatingEmail">Email address</label>
+        </div>
+
+        {/* Password */}
+        <div className="form-floating">
+          <input
+            type="password"
+            className="form-control"
+            id="floatingPassword"
+            placeholder="Password"
+            value={password} // Use the state variable for value
+            onChange={(e) => setPassword(e.target.value)} // Update state on change
+            name="new-password"
+            autoComplete="new-password"
+            required
+          />
+          <label htmlFor="floatingPassword">Password</label>
+        </div>
+
+        {/* Button */}
+        <div className="d-center d-block mt-3">
+          <button type="submit" className="btn btn-primary px-5 mb-3 fs-5">
+            Register
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+};
 
 export default Register;

@@ -1,9 +1,9 @@
 import "./FaceRecognition.css";
 
-const FaceRecognition = ({ imageUrl, box }) => {
+const FaceRecognition = ({ imageUrl, arrayOfBoxes }) => {
   return (
     <div className="d-center mt-4">
-      <div style={{ position: "absolute" }}>
+      <div style={{ position: "relative" }}>
         <img
           src={imageUrl}
           alt=""
@@ -12,15 +12,19 @@ const FaceRecognition = ({ imageUrl, box }) => {
           width="500px"
           height="auto"
         />
-        <div
-          className="bounding-box"
-          style={{
-            top: box.topRow,
-            right: box.rightCol,
-            bottom: box.bottomRow,
-            left: box.leftCol
-          }}
-        ></div>
+        {arrayOfBoxes.map((box, index) => (
+          <div
+            key={index} // Fiecare element necesită o cheie unică
+            className="bounding-box"
+            style={{
+              top: box.topRow,
+              right: box.rightCol,
+              bottom: box.bottomRow,
+              left: box.leftCol,
+              position: "absolute" // Asigură-te că este poziționat corect
+            }}
+          ></div>
+        ))}
       </div>
     </div>
   );
