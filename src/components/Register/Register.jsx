@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Imports for Redux store
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { signIn } from "../../redux/actions/actions";
 
 const Register = ({ connectionToBackendLink }) => {
   // Hook pentru navigare
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   // Define state variables for name, email, and password
@@ -15,10 +15,9 @@ const Register = ({ connectionToBackendLink }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  
   const onRegisterSubmit = (event) => {
     // Prevent the default form submission
-    event.preventDefault(); 
+    event.preventDefault();
 
     fetch(connectionToBackendLink + "register", {
       method: "POST",
@@ -40,10 +39,10 @@ const Register = ({ connectionToBackendLink }) => {
       .then((data) => {
         if (data.user.id) {
           // Când utilizatorul se autentifică cu succes, trimitem acțiunea de sign in
-          dispatch(signIn(userData));
-          
+          dispatch(signIn(data.user));
+
           // Navigare la pagina de Home după înregistrare reușită
-          navigate("/home"); 
+          navigate("/home");
 
           // Stocăm token-ul în localStorage
           localStorage.setItem("token", data.token);

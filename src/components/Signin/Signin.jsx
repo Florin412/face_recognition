@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Imports for Redux store
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { signIn } from "../../redux/actions/actions";
 
 const Signin = ({ connectionToBackendLink }) => {
@@ -14,9 +14,8 @@ const Signin = ({ connectionToBackendLink }) => {
   const [signInPassword, setSignInPassword] = useState("");
 
   // State for error message
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
 
-  
   const onEmailChange = (event) => {
     setSignInEmail(event.target.value);
   };
@@ -27,7 +26,7 @@ const Signin = ({ connectionToBackendLink }) => {
 
   const onSubmitSignIn = (event) => {
     // Prevent default form submission
-    event.preventDefault(); 
+    event.preventDefault();
 
     // Reset error message before making a new request
     setErrorMessage("");
@@ -51,16 +50,17 @@ const Signin = ({ connectionToBackendLink }) => {
       .then((data) => {
         if (data.user.id) {
           // Când utilizatorul se autentifică cu succes, trimitem acțiunea de sign in
+
           dispatch(signIn(data.user));
 
           // Navigare către pagina de Home după autentificare
-          navigate("/home"); 
+          navigate("/home");
 
           // Stocăm token-ul în localStorage
           localStorage.setItem("token", data.token);
         } else {
           // Afișare mesaj de eroare dacă autentificarea nu reușește
-          setErrorMessage("Email or password incorrect."); 
+          setErrorMessage("Email or password incorrect.");
         }
       })
       .catch((error) => {

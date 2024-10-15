@@ -14,26 +14,18 @@ import { useNavigate } from "react-router-dom";
 
 // Redux imports.
 import { Provider } from "react-redux";
-import store from "./redux/store";
-import { signIn } from "./redux/store";
 import { useSelector, useDispatch } from "react-redux";
 
+import store from "./redux/store";
+
 // Import redux actions.
-import { signOut, updateEntries } from "./redux/actions/actions";
+import { signIn, signOut, updateEntries } from "./redux/actions/actions";
 
 const connectionToBackendLink = localHostServerLink;
 
-// const initialUserState = {
-//   id: "",
-//   name: "",
-//   email: "",
-//   entries: 0,
-//   joined: ""
-// };
-
 const App = () => {
   const dispatch = useDispatch();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Get the state from Redux Store.
   const { isSignedIn, user } = useSelector((state) => state.user);
@@ -58,9 +50,9 @@ const App = () => {
         return response.json();
       })
       .then((data) => {
+        
         dispatch(signIn(data));
-        // loadUser(data);
-        // setIsSignedIn(true);
+       
         navigate("/home");
       })
       .catch((error) => {

@@ -1,41 +1,49 @@
 // store.js
-import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-const initialUserState = {
+// Creează un reducer simplu (poți avea mai mulți și să-i combini ulterior)
+const initialState = {
   isSignedIn: false,
   user: {
     id: "",
     name: "",
     email: "",
     entries: 0,
-    joined: "",
-  },
+    joined: ""
+  }
 };
 
-const userSlice = createSlice({
-  name: 'user',
-  initialState: initialUserState,
-  reducers: {
-    signIn(state, action) {
-      state.isSignedIn = true;
-      state.user = action.payload;
-    },
-    signOut(state) {
-      state.isSignedIn = false;
-      state.user = initialUserState.user;
-    },
-    updateEntries(state, action) {
-      state.user.entries = action.payload;
-    }
+const userReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case "SIGN_IN":
+      return {
+        ...state,
+        isSignedIn: true,
+        user: action.payload
+      };
+    case "SIGN_OUT":
+      return {
+        ...state,
+        isSignedIn: false,
+        user: initialState.user
+      };
+    case "UPDATE_ENTRIES":
+      return {
+        ...state,
+        user: {
+          ...state.user, // Menținem restul proprietăților din user
+          entries: action.payload // Actualizăm doar numărul de entries
+        }
+      };
+    default:
+      return state;
   }
-});
-
-export const { signIn, signOut, updateEntries } = userSlice.actions;
+};
 
 const store = configureStore({
   reducer: {
-    user: userSlice.reducer,
-  },
+    user: userReducer
+  }
 });
 
 export default store;
