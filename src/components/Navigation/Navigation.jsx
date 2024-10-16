@@ -1,14 +1,21 @@
 import "./Navigation.css";
 import { useNavigate } from "react-router-dom";
 
-const Navigation = ({ isSignedIn, onSignOut }) => {
-  const navigate = useNavigate(); // Hook pentru navigare
+// Imports for Redux.
+import { useSelector } from "react-redux";
+
+const Navigation = ({ onSignOut }) => {
+  const navigate = useNavigate();
+
+  // Access data from redux store.
+  const isSignedIn = useSelector((state) => state.user.isSignedIn);
 
   const handleSignOut = () => {
-    // Aici poți adăuga logica de delogare, dacă este necesar.
-    // De exemplu, poți șterge token-urile de autentificare sau datele utilizatorului.
-    onSignOut(); // Apelăm funcția onSignOut pentru a actualiza starea de autentificare
-    navigate("/signin"); // Navigare către pagina de Signin
+    // Apelăm funcția onSignOut pentru a actualiza starea de autentificare
+    onSignOut();
+
+    // Navigare către pagina de Signin
+    navigate("/signin");
   };
 
   if (isSignedIn) {
