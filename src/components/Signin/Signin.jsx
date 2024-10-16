@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
-  // Define state variables for email and password
+// Imports for Redux store
+import { useDispatch } from "react-redux";
+import { signIn } from "../../redux/actions/actions";
+
+const Signin = ({ connectionToBackendLink }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Local state variabiles
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
 
-  const [errorMessage, setErrorMessage] = useState(""); // State pentru mesajul de eroare
-
-  const navigate = useNavigate(); // Hook pentru navigare
+  // State for error message
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onEmailChange = (event) => {
     setSignInEmail(event.target.value);
@@ -19,7 +25,8 @@ const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
   };
 
   const onSubmitSignIn = (event) => {
-    event.preventDefault(); // Prevent default form submission
+    // Prevent default form submission
+    event.preventDefault();
 
     // Reset error message before making a new request
     setErrorMessage("");
@@ -42,19 +49,23 @@ const Signin = ({ loadUser, onSignIn, connectionToBackendLink }) => {
       })
       .then((data) => {
         if (data.user.id) {
-          loadUser(data.user);
-          onSignIn(); // Trigger the sign-in action
-          navigate("/home"); // Navigare către pagina de Home după autentificare
+          // Când utilizatorul se autentifică cu succes, trimitem acțiunea de sign in
+
+          dispatch(signIn(data.user));
+
+          // Navigare către pagina de Home după autentificare
+          navigate("/home");
 
           // Stocăm token-ul în localStorage
           localStorage.setItem("token", data.token);
         } else {
-          setErrorMessage("Email or password incorrect."); // Afișare mesaj de eroare dacă autentificarea nu reușește
+          // Afișare mesaj de eroare dacă autentificarea nu reușește
+          setErrorMessage("Email or password incorrect.");
         }
       })
       .catch((error) => {
         console.error("Login error:", error);
-        setErrorMessage("Email or password incorrect. Please try again."); // Setează mesajul de eroare
+        setErrorMessage("Email or password incorrect. Please try again.");
       });
   };
 
