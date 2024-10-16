@@ -2,23 +2,20 @@ import "./Navigation.css";
 import { useNavigate } from "react-router-dom";
 
 // Imports for Redux.
-import { useSelector, useDispatch } from 'react-redux';
-import { signOut } from "../../redux/store";
+import { useSelector } from "react-redux";
 
 const Navigation = ({ onSignOut }) => {
-  const navigate = useNavigate(); 
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Access data from redux store.
   const isSignedIn = useSelector((state) => state.user.isSignedIn);
-  
 
   const handleSignOut = () => {
     // Apelăm funcția onSignOut pentru a actualiza starea de autentificare
-    onSignOut(); 
+    onSignOut();
 
     // Navigare către pagina de Signin
-    navigate("/signin"); 
+    navigate("/signin");
   };
 
   if (isSignedIn) {

@@ -84,10 +84,6 @@ const App = () => {
     }
   }, []);
 
-  // const loadUser = (userToLoad) => {
-  //   setUser(userToLoad);
-  // };
-
   const onSignOut = () => {
     // Clear the user's data from redux store.
     dispatch(signOut());
@@ -157,11 +153,8 @@ const App = () => {
           })
             .then((res) => res.json())
             .then((entries) => {
-              console.log(entries);
               // now we update the entries field in redux store
               dispatch(updateEntries(entries));
-
-              // setUser((prevUser) => ({ ...prevUser, entries }));
             })
             .catch((err) =>
               console.log("Error fetching entries' user from our server api")
