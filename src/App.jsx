@@ -50,9 +50,8 @@ const App = () => {
         return response.json();
       })
       .then((data) => {
-        
         dispatch(signIn(data));
-       
+
         navigate("/home");
       })
       .catch((error) => {
@@ -158,8 +157,9 @@ const App = () => {
           })
             .then((res) => res.json())
             .then((entries) => {
+              console.log(entries);
               // now we update the entries field in redux store
-              dispatch(updateEntries(newEntries));
+              dispatch(updateEntries(entries));
 
               // setUser((prevUser) => ({ ...prevUser, entries }));
             })
