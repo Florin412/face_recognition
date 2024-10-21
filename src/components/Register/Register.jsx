@@ -57,42 +57,6 @@ const Register = ({ connectionToBackendLink }) => {
         setErrorMessage(error.message); // Setăm mesajul de eroare pentru a fi afișat
         console.error("Unable to register:", error);
       });
-
-    // fetch(connectionToBackendLink + "register", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({
-    //     name: name,
-    //     email: email,
-    //     password: password
-    //   })
-    // })
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       console.log(res);
-    //       throw new Error("Network response was not ok");
-    //     }
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     if (data.user.id) {
-    //       // Când utilizatorul se autentifică cu succes, trimitem acțiunea de sign in
-    //       dispatch(signIn(data.user));
-
-    //       // Navigare la pagina de Home după înregistrare reușită
-    //       navigate("/home");
-
-    //       // Stocăm token-ul în localStorage
-    //       localStorage.setItem("token", data.token);
-    //     } else {
-    //       console.log("Unable to register. User ID not received.");
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error("Unable to register:", err);
-    //   });
   };
 
   return (
