@@ -32,6 +32,7 @@ const Register = ({ connectionToBackendLink }) => {
     })
       .then((res) => {
         if (!res.ok) {
+          console.log(res);
           throw new Error("Network response was not ok");
         }
         return res.json();
