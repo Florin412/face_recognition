@@ -14,10 +14,14 @@ const Register = ({ connectionToBackendLink }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onRegisterSubmit = (event) => {
     // Prevent the default form submission
     event.preventDefault();
+
+    // Resetăm mesajul de eroare înainte de a trimite cererea
+    setErrorMessage("");
 
     fetch(connectionToBackendLink + "register", {
       method: "POST",
@@ -140,6 +144,8 @@ const Register = ({ connectionToBackendLink }) => {
           <button type="submit" className="btn btn-primary px-5 mb-3 fs-5">
             Register
           </button>
+
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
         </div>
       </div>
     </form>
