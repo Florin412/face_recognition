@@ -8,7 +8,7 @@ import ParticlesBg from "particles-bg";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import Signin from "./components/Signin/Signin";
 import Register from "./components/Register/Register";
-import { localHostServerLink } from "./URL_Links";
+import { localHostServerLink, hostedServerLink } from "./URL_Links";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +21,7 @@ import store from "./redux/store";
 // Import redux actions.
 import { signIn, signOut, updateEntries } from "./redux/actions/actions";
 
-const connectionToBackendLink = localHostServerLink;
+const connectionToBackendLink = hostedServerLink;
 
 const App = () => {
   const dispatch = useDispatch();

@@ -14,27 +14,30 @@ const Register = ({ connectionToBackendLink }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onRegisterSubmit = (event) => {
     // Prevent the default form submission
     event.preventDefault();
+
+    // Resetăm mesajul de eroare înainte de a trimite cererea
+    setErrorMessage("");
 
     fetch(connectionToBackendLink + "register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        name: name,
-        email: email,
-        password: password
-      })
+      body: JSON.stringify({ name, email, password })
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
+      .then((response) => {
+        if (!response.ok) {
+          // Verificăm dacă răspunsul nu este ok
+          return response.json().then((data) => {
+            throw new Error(data); // Aruncăm o eroare cu mesajul de la server
+          });
         }
-        return res.json();
+        return response.json();
       })
       .then((data) => {
         if (data.user.id) {
@@ -50,8 +53,9 @@ const Register = ({ connectionToBackendLink }) => {
           console.log("Unable to register. User ID not received.");
         }
       })
-      .catch((err) => {
-        console.error("Unable to register:", err);
+      .catch((error) => {
+        setErrorMessage(error.message); // Setăm mesajul de eroare pentru a fi afișat
+        console.error("Unable to register:", error);
       });
   };
 
@@ -114,6 +118,8 @@ const Register = ({ connectionToBackendLink }) => {
           <button type="submit" className="btn btn-primary px-5 mb-3 fs-5">
             Register
           </button>
+
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
         </div>
       </div>
     </form>
