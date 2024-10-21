@@ -21,7 +21,7 @@ import store from "./redux/store";
 // Import redux actions.
 import { signIn, signOut, updateEntries } from "./redux/actions/actions";
 
-const connectionToBackendLink = localHostServerLink;
+const connectionToBackendLink = hostedServerLink;
 
 const App = () => {
   const dispatch = useDispatch();
