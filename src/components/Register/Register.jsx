@@ -40,8 +40,18 @@ const Register = ({ connectionToBackendLink }) => {
         return response.json();
       })
       .then((data) => {
-        // Procesăm datele de răspuns (de exemplu, autentificare utilizator)
-        console.log("Registration successful", data);
+        if (data.user.id) {
+          // Când utilizatorul se autentifică cu succes, trimitem acțiunea de sign in
+          dispatch(signIn(data.user));
+
+          // Navigare la pagina de Home după înregistrare reușită
+          navigate("/home");
+
+          // Stocăm token-ul în localStorage
+          localStorage.setItem("token", data.token);
+        } else {
+          console.log("Unable to register. User ID not received.");
+        }
       })
       .catch((error) => {
         setErrorMessage(error.message); // Setăm mesajul de eroare pentru a fi afișat
