@@ -10,7 +10,7 @@ const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
 
       <div className="h6 my-4">
         {
-          "Find an image on Google -> right-click -> Copy Image Address -> insert that URL into the input below and press Detect"
+          "Find an image on Google -> select it with left-click -> right-click -> Copy Image Address -> insert that URL into the input below and press Detect"
         }
       </div>
 
